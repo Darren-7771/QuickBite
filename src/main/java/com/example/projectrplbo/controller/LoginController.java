@@ -57,14 +57,7 @@ public class LoginController {
             if (admin == null) {
                 showError("Kredensial Admin tidak valid.");
             } else {
-                try {
-                    AdminDashboardController ctrl = MainApp.loadSceneWithController(
-                            "admin-dashboard-view.fxml", "QuickBite - Admin Dashboard", 1200, 700);
-                    ctrl.initData(admin);
-                } catch (IOException e) {
-                    showError("Gagal membuka halaman dashboard admin.");
-                    e.printStackTrace();
-                }
+                showError("Dashboard Admin belum tersedia. Gunakan mode Customer.");
             }
         } else {
             Pengguna pengguna = retrieval.loginPengguna(username, password);
