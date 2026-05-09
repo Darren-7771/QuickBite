@@ -137,8 +137,10 @@ public class AdminDashboardController {
     }
 
     @FXML
-    private void handleNavPenjualan() {
-
+    private void handleNavPenjualan() throws IOException {
+        AdminPenjualanController ctrl = MainApp.loadSceneWithController(
+            "admin-penjualan-view.fxml", "QuickBite Admin - Manajemen Penjualan", 1100, 700);
+        ctrl.initData(admin);
     }
 
     @FXML
