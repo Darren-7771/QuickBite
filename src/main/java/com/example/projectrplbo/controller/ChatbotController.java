@@ -76,10 +76,7 @@ public class ChatbotController {
             "Saya adalah asisten otomatis yang siap membantu Anda memesan makanan favorit Anda.";
         addBotMessage(welcome);
 
-        String guide = "Untuk memulai, gunakan perintah berikut:\n" +
-            "> Ketik MENU untuk melihat daftar menu lengkap\n" +
-            "> Ketik CARI [Kategori] untuk mencari menu berdasarkan kategori\n" +
-            "> Ketik PESAN [ID Menu] untuk memesan makanan";
+        String guide = "Silakan mulai chat untuk memesan.";
         addBotMessage(guide);
 
         addQuickCommands();

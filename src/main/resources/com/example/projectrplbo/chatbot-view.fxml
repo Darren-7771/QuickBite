@@ -89,13 +89,13 @@
 
             <HBox alignment="CENTER" spacing="12" styleClass="chat-input-bar">
                 <padding><Insets bottom="12" left="20" right="20" top="12" /></padding>
-                <TextField fx:id="tfInput" onKeyPressed="#handleInputKeyPress" prefHeight="42" promptText="Masukkan perintah atau ID Menu di sini..." styleClass="chat-input" HBox.hgrow="ALWAYS" />
+                <TextField fx:id="tfInput" onKeyPressed="#handleInputKeyPress" prefHeight="42" promptText="Ketik pertanyaan atau perintah, contoh: Menu apa yang tersedia?" styleClass="chat-input" HBox.hgrow="ALWAYS" />
                 <Button onAction="#handleKirimPesan" prefHeight="42" prefWidth="42" styleClass="btn-send" text="➤" />
             </HBox>
 
             <HBox alignment="CENTER" styleClass="chat-footer">
                 <padding><Insets bottom="6" top="4" /></padding>
-                <Label styleClass="footer-hint" text="Gunakan perintah seperti: MENU, PESAN, STATUS, BATAL   " />
+                <Label styleClass="footer-hint" text="Coba: &quot;Menu apa saja?&quot;, &quot;Ada burger?&quot;, &quot;Saya mau pesan MKN00001&quot;   " />
                 <Label styleClass="footer-powered" text="Powered by " />
                 <Label styleClass="footer-brand" text="QuickBite" />
             </HBox>
