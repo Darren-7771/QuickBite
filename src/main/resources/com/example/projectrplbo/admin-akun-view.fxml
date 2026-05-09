@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefWidth="1100" prefHeight="700"
+            styleClass="admin-root"
+            stylesheets="@css/styles.css"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.projectrplbo.controller.AdminAkunController">
+
+    <left>
+        <VBox styleClass="admin-sidebar" prefWidth="220" minWidth="200">
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="admin-sidebar-brand">
+                <padding><Insets top="24" bottom="24" left="20" right="20"/></padding>
+                <Label text="🍴" styleClass="admin-brand-icon"/>
+                <Label text="QuickBite" styleClass="admin-brand-name"/>
+            </HBox>
+
+            <VBox styleClass="admin-nav" VBox.vgrow="ALWAYS" spacing="4">
+                <padding><Insets top="20" left="12" right="12" bottom="12"/></padding>
+
+                <HBox styleClass="admin-nav-item" alignment="CENTER_LEFT" spacing="12"
+                      onMouseClicked="#handleNavDashboard">
+                    <padding><Insets top="10" bottom="10" left="12" right="12"/></padding>
+                    <Label text="⊞" styleClass="admin-nav-icon"/>
+                    <Label text="Dashboard" styleClass="admin-nav-label"/>
+                </HBox>
+
+                <HBox styleClass="admin-nav-item" alignment="CENTER_LEFT" spacing="12"
+                      onMouseClicked="#handleNavProduk">
+                    <padding><Insets top="10" bottom="10" left="12" right="12"/></padding>
+                    <Label text="⬡" styleClass="admin-nav-icon"/>
+                    <Label text="Manajemen Produk" styleClass="admin-nav-label"/>
+                </HBox>
+
+                <HBox styleClass="admin-nav-item" alignment="CENTER_LEFT" spacing="12"
+                      onMouseClicked="#handleNavPenjualan">
+                    <padding><Insets top="10" bottom="10" left="12" right="12"/></padding>
+                    <Label text="↗" styleClass="admin-nav-icon"/>
+                    <Label text="Manajemen Penjualan" styleClass="admin-nav-label"/>
+                </HBox>
+
+                <HBox styleClass="admin-nav-item" alignment="CENTER_LEFT" spacing="12"
+                      onMouseClicked="#handleNavJamOp">
+                    <padding><Insets top="10" bottom="10" left="12" right="12"/></padding>
+                    <Label text="⏱" styleClass="admin-nav-icon"/>
+                    <Label text="Manajemen Jam Operasional" styleClass="admin-nav-label" wrapText="true"/>
+                </HBox>
+
+                <HBox styleClass="admin-nav-item-active" alignment="CENTER_LEFT" spacing="12">
+                    <padding><Insets top="10" bottom="10" left="12" right="12"/></padding>
+                    <Label text="👤" styleClass="admin-nav-icon"/>
+                    <Label text="Manajemen Akun" styleClass="admin-nav-label-active"/>
+                </HBox>
+            </VBox>
+
+            <VBox styleClass="admin-sidebar-footer">
+                <padding><Insets top="16" bottom="16" left="16" right="16"/></padding>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <StackPane styleClass="admin-avatar">
+                        <Label text="👤" styleClass="admin-avatar-icon"/>
+                    </StackPane>
+                    <VBox>
+                        <Label text="Admin" styleClass="admin-profile-role"/>
+                        <Label fx:id="lblNamaAdmin" text="Administrator" styleClass="admin-profile-name"/>
+                    </VBox>
+                </HBox>
+                <Region prefHeight="12"/>
+                <Button text="⬅  Keluar" onAction="#handleKeluar"
+                        styleClass="admin-btn-keluar" maxWidth="Infinity"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="admin-content-scroll">
+            <VBox styleClass="admin-content">
+                <HBox alignment="CENTER_LEFT" styleClass="admin-content-header">
+                    <padding><Insets top="28" bottom="20" left="32" right="32"/></padding>
+                    <Label text="Manajemen Akun Pengguna" styleClass="admin-page-title" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <VBox spacing="16">
+                    <padding><Insets left="32" right="32" bottom="28"/></padding>
+
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <HBox styleClass="admin-search-box" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT" spacing="8">
+                            <padding><Insets top="0" bottom="0" left="12" right="12"/></padding>
+                            <Label text="🔍" styleClass="admin-search-icon"/>
+                            <TextField fx:id="tfCariAkun"
+                                       promptText="Cari berdasarkan Nama, Email, atau Username..."
+                                       styleClass="admin-search-inner"
+                                       HBox.hgrow="ALWAYS"
+                                       onKeyReleased="#handleCari"/>
+                        </HBox>
+                        <ComboBox fx:id="cbFilterStatus" styleClass="admin-combo" prefWidth="160"/>
+                        <Button text="+ Tambah Pengguna" onAction="#handleTambahPengguna"
+                                styleClass="admin-btn-primary" prefWidth="170"/>
+                    </HBox>
+
+                    <VBox styleClass="admin-card" spacing="0">
+                        <padding><Insets top="0" bottom="0" left="0" right="0"/></padding>
+
+                        <HBox styleClass="admin-table-header" spacing="0">
+                            <padding><Insets top="10" bottom="10" left="16" right="16"/></padding>
+                            <Region minWidth="36" maxWidth="36"/>
+                            <Label text="Foto &amp; Nama"  styleClass="admin-th" minWidth="160" HBox.hgrow="ALWAYS"/>
+                            <Label text="Username"         styleClass="admin-th" minWidth="130"/>
+                            <Label text="Kontak"           styleClass="admin-th" minWidth="200"/>
+                            <Label text="Tanggal Daftar"   styleClass="admin-th" minWidth="130"/>
+                            <Label text="Status"           styleClass="admin-th" minWidth="90"/>
+                            <Label text="Aksi"             styleClass="admin-th" minWidth="110"/>
+                        </HBox>
+
+                        <VBox fx:id="vboxAkunRows" styleClass="admin-table-body" spacing="0"/>
+
+                        <HBox alignment="CENTER_RIGHT" spacing="8" styleClass="admin-paging-bar">
+                            <padding><Insets top="12" bottom="12" left="16" right="16"/></padding>
+                            <Label fx:id="lblPagingInfo" text="Menampilkan 0-0 dari 0 pengguna"
+                                   styleClass="admin-paging-info" HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="btnPrev" text="Sebelumnya" onAction="#handlePrev"
+                                    styleClass="admin-btn-paging"/>
+                            <HBox fx:id="hboxPageNumbers" spacing="4" alignment="CENTER"/>
+                            <Button fx:id="btnNext" text="Selanjutnya" onAction="#handleNext"
+                                    styleClass="admin-btn-paging"/>
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="admin-card" spacing="12">
+                        <padding><Insets top="20" bottom="20" left="20" right="20"/></padding>
+                        <Label text="Pengaturan Chatbot" styleClass="admin-card-title"/>
+
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="Auto-reply Saat Tutup" styleClass="jamop-apply-title"/>
+                                <Label text="Kirim pesan otomatis ketika toko sedang tutup"
+                                       styleClass="jamop-apply-desc"/>
+                            </VBox>
+                            <ToggleButton fx:id="toggleAutoReply" styleClass="akun-toggle-btn"
+                                         onAction="#handleToggleAutoReply"/>
+                        </HBox>
+                    </VBox>
+
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

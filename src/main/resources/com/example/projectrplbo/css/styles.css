@@ -1444,3 +1444,168 @@
     -fx-padding: 4 10;
     -fx-min-height: 28;
 }
+
+.jamop-status-banner-open {
+    -fx-background-color: #F0FFF8;
+    -fx-border-color: #10B981;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.jamop-status-banner-closed {
+    -fx-background-color: #FFF5F5;
+    -fx-border-color: #E8453C;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.jamop-status-circle {
+    -fx-background-color: #10B981;
+    -fx-background-radius: 50;
+    -fx-min-width: 40;
+    -fx-min-height: 40;
+    -fx-max-width: 40;
+    -fx-max-height: 40;
+}
+
+.jamop-status-check {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.jamop-status-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #065F46;
+}
+
+.jamop-status-desc {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6B7280;
+}
+
+.jamop-status-label-small {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6B7280;
+    -fx-alignment: CENTER_RIGHT;
+}
+
+.jamop-status-open {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #10B981;
+    -fx-alignment: CENTER_RIGHT;
+}
+
+.jamop-status-closed {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #E8453C;
+    -fx-alignment: CENTER_RIGHT;
+}
+
+.jamop-time-field {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.jamop-time-field:focused-within {
+    -fx-border-color: #1E3A8A;
+    -fx-border-width: 2;
+}
+
+.jamop-time-input {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-font-size: 15px;
+    -fx-text-fill: #1A1A2E;
+    -fx-prompt-text-fill: #9CA3AF;
+    -fx-padding: 0;
+}
+
+.jamop-clock-icon {
+    -fx-font-size: 16px;
+    -fx-text-fill: #9CA3AF;
+}
+
+.jamop-apply-all-box {
+    -fx-background-color: #F5F6FA;
+    -fx-border-color: #E5E7EB;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.jamop-checkbox {
+    -fx-cursor: hand;
+}
+
+.jamop-apply-title {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A2E;
+}
+
+.jamop-apply-desc {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6B7280;
+}
+
+.jamop-info-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #065F46;
+    -fx-background-color: #ECFDF5;
+    -fx-padding: 6 10;
+    -fx-background-radius: 6;
+}
+
+.admin-cell-sub {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6B7280;
+}
+
+.akun-avatar-mini {
+    -fx-background-color: #E5E7EB;
+    -fx-background-radius: 50;
+    -fx-min-width: 32;
+    -fx-min-height: 32;
+    -fx-max-width: 32;
+    -fx-max-height: 32;
+}
+
+.akun-avatar-mini-icon {
+    -fx-font-size: 15px;
+    -fx-text-fill: #6B7280;
+}
+
+.admin-paging-bar {
+    -fx-border-color: #E5E7EB;
+    -fx-border-width: 1 0 0 0;
+}
+
+.akun-toggle-btn {
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+    -fx-min-width: 64;
+    -fx-min-height: 32;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+}
+
+.akun-toggle-on {
+    -fx-background-color: #1E3A8A;
+    -fx-text-fill: white;
+}
+
+.akun-toggle-off {
+    -fx-background-color: #D1D5DB;
+    -fx-text-fill: #4B5563;
+}

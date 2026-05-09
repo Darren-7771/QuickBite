@@ -477,6 +477,132 @@ public class Retrieval {
         return false;
     }
 
+
+    public boolean updateJadwalOperasional(LocalTime jamBuka, LocalTime jamTutup, String hari) {
+        String sqlCheck = "SELECT id_jadwal FROM Jadwal_Operasional ORDER BY id_jadwal LIMIT 1";
+        try (PreparedStatement psCheck = conn.prepareStatement(sqlCheck)) {
+            ResultSet rs = psCheck.executeQuery();
+            if (rs.next()) {
+                int id = rs.getInt("id_jadwal");
+                String sqlUp = "UPDATE Jadwal_Operasional SET jam_buka=?, jam_tutup=?, hari=? WHERE id_jadwal=?";
+                try (PreparedStatement ps = conn.prepareStatement(sqlUp)) {
+                    ps.setString(1, jamBuka.toString());
+                    ps.setString(2, jamTutup.toString());
+                    ps.setString(3, hari);
+                    ps.setInt(4, id);
+                    return ps.executeUpdate() > 0;
+                }
+            } else {
+                String sqlIns = "INSERT INTO Jadwal_Operasional (jam_buka, jam_tutup, hari) VALUES (?,?,?)";
+                try (PreparedStatement ps = conn.prepareStatement(sqlIns)) {
+                    ps.setString(1, jamBuka.toString());
+                    ps.setString(2, jamTutup.toString());
+                    ps.setString(3, hari);
+                    return ps.executeUpdate() > 0;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error updateJadwalOperasional: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public List<PenggunaInfo> getAllPenggunaInfo() {
+        List<PenggunaInfo> list = new ArrayList<>();
+        String sql = """
+            SELECT a.id_akun, p.id_pengguna, p.nama_lengkap, a.username,
+                   p.email, p.no_telepon,
+                   COALESCE(a.status, 'Aktif') AS status
+            FROM Akun a
+            JOIN Pengguna p ON a.id_akun = p.id_akun
+            WHERE a.role = 'Pengguna'
+            ORDER BY p.id_pengguna DESC
+        """;
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            int urut = 1;
+            while (rs.next()) {
+                String tgl = "01 Jan 2024";
+                list.add(new PenggunaInfo(
+                    rs.getString("id_akun"),
+                    rs.getString("id_pengguna"),
+                    rs.getString("nama_lengkap"),
+                    rs.getString("username"),
+                    rs.getString("email"),
+                    rs.getString("no_telepon"),
+                    tgl,
+                    rs.getString("status")
+                ));
+                urut++;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getAllPenggunaInfo (retrying without status): " + e.getMessage());
+            list = getAllPenggunaInfoFallback();
+        }
+        return list;
+    }
+
+    private List<PenggunaInfo> getAllPenggunaInfoFallback() {
+        List<PenggunaInfo> list = new ArrayList<>();
+        String sql = """
+            SELECT a.id_akun, p.id_pengguna, p.nama_lengkap, a.username,
+                   p.email, p.no_telepon
+            FROM Akun a
+            JOIN Pengguna p ON a.id_akun = p.id_akun
+            WHERE a.role = 'Pengguna'
+            ORDER BY p.id_pengguna DESC
+        """;
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(new PenggunaInfo(
+                    rs.getString("id_akun"),
+                    rs.getString("id_pengguna"),
+                    rs.getString("nama_lengkap"),
+                    rs.getString("username"),
+                    rs.getString("email"),
+                    rs.getString("no_telepon"),
+                    "01 Jan 2024",
+                    "Aktif"
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getAllPenggunaInfoFallback: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public boolean updateStatusAkun(String idAkun, String status) {
+        ensureStatusColumn();
+        String sql = "UPDATE Akun SET status = ? WHERE id_akun = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setString(2, idAkun);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updateStatusAkun: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean hapusAkun(String idAkun) {
+        String sql = "DELETE FROM Akun WHERE id_akun = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, idAkun);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error hapusAkun: " + e.getMessage());
+        }
+        return false;
+    }
+    private void ensureStatusColumn() {
+        try (PreparedStatement ps = conn.prepareStatement(
+                "ALTER TABLE Akun ADD COLUMN status VARCHAR(20) DEFAULT 'Aktif'")) {
+            ps.executeUpdate();
+        } catch (SQLException ignored) {
+        }
+    }
+
         public Response createResponse(int status, String msg, Object data) {
         return new Response(status, msg, data);
     }
