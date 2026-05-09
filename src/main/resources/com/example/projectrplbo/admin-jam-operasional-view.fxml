@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefWidth="1100" prefHeight="700"
+            styleClass="admin-root"
+            stylesheets="@css/styles.css"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.projectrplbo.controller.AdminJamOperasionalController">
+
+    <left>
+        <VBox styleClass="admin-sidebar" prefWidth="220" minWidth="200">
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="admin-sidebar-brand">
+                <padding><Insets top="24" bottom="24" left="20" right="20"/></padding>
+                <Label text="🍴" styleClass="admin-brand-icon"/>
+                <Label text="QuickBite" styleClass="admin-brand-name"/>
+            </HBox>
+
+            <VBox styleClass="admin-nav" VBox.vgrow="ALWAYS" spacing="4">
+                <padding><Insets top="20" left="12" right="12" bottom="12"/></padding>
+
+                <HBox styleClass="admin-nav-item" alignment="CENTER_LEFT" spacing="12"
+                      onMouseClicked="#handleNavDashboard">
+                    <padding><Insets top="10" bottom="10" left="12" right="12"/></padding>
+                    <Label text="⊞" styleClass="admin-nav-icon"/>
+                    <Label text="Dashboard" styleClass="admin-nav-label"/>
+                </HBox>
+
+                <HBox styleClass="admin-nav-item" alignment="CENTER_LEFT" spacing="12"
+                      onMouseClicked="#handleNavProduk">
+                    <padding><Insets top="10" bottom="10" left="12" right="12"/></padding>
+                    <Label text="⬡" styleClass="admin-nav-icon"/>
+                    <Label text="Manajemen Produk" styleClass="admin-nav-label"/>
+                </HBox>
+
+                <HBox styleClass="admin-nav-item" alignment="CENTER_LEFT" spacing="12"
+                      onMouseClicked="#handleNavPenjualan">
+                    <padding><Insets top="10" bottom="10" left="12" right="12"/></padding>
+                    <Label text="↗" styleClass="admin-nav-icon"/>
+                    <Label text="Manajemen Penjualan" styleClass="admin-nav-label"/>
+                </HBox>
+
+                <HBox styleClass="admin-nav-item-active" alignment="CENTER_LEFT" spacing="12">
+                    <padding><Insets top="10" bottom="10" left="12" right="12"/></padding>
+                    <Label text="⏱" styleClass="admin-nav-icon"/>
+                    <Label text="Manajemen Jam Operasional" styleClass="admin-nav-label-active" wrapText="true"/>
+                </HBox>
+
+                <HBox styleClass="admin-nav-item" alignment="CENTER_LEFT" spacing="12"
+                      onMouseClicked="#handleNavAkun">
+                    <padding><Insets top="10" bottom="10" left="12" right="12"/></padding>
+                    <Label text="👤" styleClass="admin-nav-icon"/>
+                    <Label text="Manajemen Akun" styleClass="admin-nav-label"/>
+                </HBox>
+            </VBox>
+
+            <VBox styleClass="admin-sidebar-footer">
+                <padding><Insets top="16" bottom="16" left="16" right="16"/></padding>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <StackPane styleClass="admin-avatar">
+                        <Label text="👤" styleClass="admin-avatar-icon"/>
+                    </StackPane>
+                    <VBox>
+                        <Label text="Admin" styleClass="admin-profile-role"/>
+                        <Label fx:id="lblNamaAdmin" text="Administrator" styleClass="admin-profile-name"/>
+                    </VBox>
+                </HBox>
+                <Region prefHeight="12"/>
+                <Button text="⬅  Keluar" onAction="#handleKeluar"
+                        styleClass="admin-btn-keluar" maxWidth="Infinity"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="admin-content-scroll">
+            <VBox styleClass="admin-content">
+                <HBox alignment="CENTER_LEFT" styleClass="admin-content-header">
+                    <padding><Insets top="28" bottom="20" left="32" right="32"/></padding>
+                    <Label text="Manajemen Jam Operasional" styleClass="admin-page-title" HBox.hgrow="ALWAYS"/>
+                </HBox>
+
+                <VBox spacing="20">
+                    <padding><Insets left="32" right="32" bottom="28"/></padding>
+
+                    <VBox styleClass="admin-card" spacing="12">
+                        <padding><Insets top="20" bottom="20" left="20" right="20"/></padding>
+                        <Label text="Status Sistem Saat Ini" styleClass="admin-card-title"/>
+
+                        <HBox fx:id="hboxStatusBanner" styleClass="jamop-status-banner-open"
+                              alignment="CENTER_LEFT" spacing="16">
+                            <padding><Insets top="16" bottom="16" left="20" right="20"/></padding>
+                            <StackPane styleClass="jamop-status-circle">
+                                <Label text="✓" styleClass="jamop-status-check"/>
+                            </StackPane>
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label fx:id="lblStatusSistem" text="SISTEM AKTIF" styleClass="jamop-status-title"/>
+                                <Label fx:id="lblStatusDesc" text="Chatbot sedang beroperasi" styleClass="jamop-status-desc"/>
+                            </VBox>
+                            <VBox alignment="CENTER_RIGHT" spacing="2">
+                                <Label text="Status Saat Ini" styleClass="jamop-status-label-small"/>
+                                <Label fx:id="lblStatusOpenClose" text="OPEN" styleClass="jamop-status-open"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="admin-card" spacing="16">
+                        <padding><Insets top="20" bottom="24" left="20" right="20"/></padding>
+                        <Label text="Konfigurasi Waktu Operasional" styleClass="admin-card-title"/>
+
+                        <HBox spacing="24">
+                            <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                <Label text="Jam Buka" styleClass="admin-form-label"/>
+                                <HBox styleClass="jamop-time-field" alignment="CENTER_LEFT" spacing="8">
+                                    <padding><Insets top="12" bottom="12" left="14" right="14"/></padding>
+                                    <TextField fx:id="tfJamBuka" text="08:00" styleClass="jamop-time-input"
+                                               promptText="HH:mm" HBox.hgrow="ALWAYS"/>
+                                    <Label text="🕐" styleClass="jamop-clock-icon"/>
+                                </HBox>
+                            </VBox>
+
+                            <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                <Label text="Jam Tutup" styleClass="admin-form-label"/>
+                                <HBox styleClass="jamop-time-field" alignment="CENTER_LEFT" spacing="8">
+                                    <padding><Insets top="12" bottom="12" left="14" right="14"/></padding>
+                                    <TextField fx:id="tfJamTutup" text="22:00" styleClass="jamop-time-input"
+                                               promptText="HH:mm" HBox.hgrow="ALWAYS"/>
+                                    <Label text="🕐" styleClass="jamop-clock-icon"/>
+                                </HBox>
+                            </VBox>
+                        </HBox>
+
+                        <HBox styleClass="jamop-apply-all-box" alignment="CENTER_LEFT" spacing="12">
+                            <padding><Insets top="14" bottom="14" left="16" right="16"/></padding>
+                            <CheckBox fx:id="chkTerapkanSemua" styleClass="jamop-checkbox"/>
+                            <VBox spacing="2">
+                                <Label text="Terapkan ke Semua Hari" styleClass="jamop-apply-title"/>
+                                <Label text="Gunakan jam operasional yang sama untuk Senin - Minggu"
+                                       styleClass="jamop-apply-desc"/>
+                            </VBox>
+                        </HBox>
+
+                        <Label fx:id="lblError" text="" styleClass="admin-form-error" visible="false" managed="false" wrapText="true"/>
+
+                        <HBox alignment="CENTER_RIGHT" spacing="12">
+                            <Button text="Simpan Perubahan" onAction="#handleSimpan"
+                                    styleClass="admin-btn-primary" prefWidth="180"/>
+                        </HBox>
+                    </VBox>
+
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>
