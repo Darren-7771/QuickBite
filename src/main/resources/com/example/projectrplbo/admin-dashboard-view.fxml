@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefWidth="1100" prefHeight="700"
+            styleClass="admin-root"
+            stylesheets="@css/styles.css"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.projectrplbo.controller.AdminDashboardController">
+
+    <left>
+        <VBox styleClass="admin-sidebar" prefWidth="220" minWidth="200">
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="admin-sidebar-brand">
+                <padding><Insets top="24" bottom="24" left="20" right="20"/></padding>
+                <Label text="🍴" styleClass="admin-brand-icon"/>
+                <Label text="QuickBite" styleClass="admin-brand-name"/>
+            </HBox>
+
+            <VBox styleClass="admin-nav" VBox.vgrow="ALWAYS" spacing="4">
+                <padding><Insets top="20" left="12" right="12" bottom="12"/></padding>
+
+                <HBox styleClass="admin-nav-item-active" alignment="CENTER_LEFT" spacing="12">
+                    <padding><Insets top="10" bottom="10" left="12" right="12"/></padding>
+                    <Label text="⊞" styleClass="admin-nav-icon"/>
+                    <Label text="Dashboard" styleClass="admin-nav-label-active"/>
+                </HBox>
+
+                <HBox styleClass="admin-nav-item" alignment="CENTER_LEFT" spacing="12"
+                      onMouseClicked="#handleNavProduk">
+                    <padding><Insets top="10" bottom="10" left="12" right="12"/></padding>
+                    <Label text="⬡" styleClass="admin-nav-icon"/>
+                    <Label text="Manajemen Produk" styleClass="admin-nav-label"/>
+                </HBox>
+
+                <HBox styleClass="admin-nav-item" alignment="CENTER_LEFT" spacing="12"
+                      onMouseClicked="#handleNavPenjualan">
+                    <padding><Insets top="10" bottom="10" left="12" right="12"/></padding>
+                    <Label text="↗" styleClass="admin-nav-icon"/>
+                    <Label text="Manajemen Penjualan" styleClass="admin-nav-label"/>
+                </HBox>
+
+                <HBox styleClass="admin-nav-item" alignment="CENTER_LEFT" spacing="12"
+                      onMouseClicked="#handleNavJamOp">
+                    <padding><Insets top="10" bottom="10" left="12" right="12"/></padding>
+                    <Label text="⏱" styleClass="admin-nav-icon"/>
+                    <Label text="Manajemen Jam Operasional" styleClass="admin-nav-label" wrapText="true"/>
+                </HBox>
+
+                <HBox styleClass="admin-nav-item" alignment="CENTER_LEFT" spacing="12"
+                      onMouseClicked="#handleNavAkun">
+                    <padding><Insets top="10" bottom="10" left="12" right="12"/></padding>
+                    <Label text="👤" styleClass="admin-nav-icon"/>
+                    <Label text="Manajemen Akun" styleClass="admin-nav-label"/>
+                </HBox>
+            </VBox>
+
+            <VBox styleClass="admin-sidebar-footer">
+                <padding><Insets top="16" bottom="16" left="16" right="16"/></padding>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <StackPane styleClass="admin-avatar">
+                        <Label text="👤" styleClass="admin-avatar-icon"/>
+                    </StackPane>
+                    <VBox>
+                        <Label text="Admin" styleClass="admin-profile-role"/>
+                        <Label fx:id="lblNamaAdmin" text="Administrator" styleClass="admin-profile-name"/>
+                    </VBox>
+                </HBox>
+                <Region prefHeight="12"/>
+                <Button text="⬅  Keluar" onAction="#handleKeluar"
+                        styleClass="admin-btn-keluar" maxWidth="Infinity"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="admin-content">
+            <HBox alignment="CENTER_LEFT" styleClass="admin-content-header">
+                <padding><Insets top="28" bottom="20" left="32" right="32"/></padding>
+                <Label text="Selamat Datang Kembali, Admin" styleClass="admin-page-title" HBox.hgrow="ALWAYS"/>
+                <TextField promptText="Search" styleClass="admin-search-field" prefWidth="200"/>
+            </HBox>
+
+            <HBox spacing="20" styleClass="admin-stat-row">
+                <padding><Insets left="32" right="32" bottom="24"/></padding>
+
+                <VBox styleClass="admin-stat-card" HBox.hgrow="ALWAYS" spacing="8">
+                    <padding><Insets top="20" bottom="20" left="20" right="20"/></padding>
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label text="Total Penjualan Hari Ini" styleClass="admin-stat-label" HBox.hgrow="ALWAYS"/>
+                        <Label text="🗂" styleClass="admin-stat-icon"/>
+                    </HBox>
+                    <Label fx:id="lblTotalPenjualan" text="Rp 0" styleClass="admin-stat-value"/>
+                </VBox>
+
+                <VBox styleClass="admin-stat-card" HBox.hgrow="ALWAYS" spacing="8">
+                    <padding><Insets top="20" bottom="20" left="20" right="20"/></padding>
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label text="Stok Menipis" styleClass="admin-stat-label" HBox.hgrow="ALWAYS"/>
+                        <Label text="📦" styleClass="admin-stat-icon"/>
+                    </HBox>
+                    <Label fx:id="lblStokMenipis" text="0 Menu" styleClass="admin-stat-value"/>
+                </VBox>
+
+                <VBox styleClass="admin-stat-card" HBox.hgrow="ALWAYS" spacing="8">
+                    <padding><Insets top="20" bottom="20" left="20" right="20"/></padding>
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label text="Menu Terlaris" styleClass="admin-stat-label" HBox.hgrow="ALWAYS"/>
+                        <Label text="🏆" styleClass="admin-stat-icon"/>
+                    </HBox>
+                    <Label fx:id="lblMenuTerlaris" text="-" styleClass="admin-stat-value"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="20" VBox.vgrow="ALWAYS">
+                <padding><Insets left="32" right="32" bottom="28"/></padding>
+
+                <VBox styleClass="admin-card" HBox.hgrow="ALWAYS" spacing="0">
+                    <padding><Insets top="20" bottom="20" left="20" right="20"/></padding>
+                    <Label text="Pesanan Terbaru" styleClass="admin-card-title"/>
+                    <Region prefHeight="16"/>
+
+                    <HBox styleClass="admin-table-header" spacing="0">
+                        <padding><Insets top="10" bottom="10" left="16" right="16"/></padding>
+                        <Label text="ID Pesanan"  styleClass="admin-th" minWidth="120"/>
+                        <Label text="Pelanggan"   styleClass="admin-th" minWidth="110" HBox.hgrow="ALWAYS"/>
+                        <Label text="Total Harga" styleClass="admin-th" minWidth="110"/>
+                        <Label text="Tanggal"     styleClass="admin-th" minWidth="110"/>
+                        <Label text="Status"      styleClass="admin-th" minWidth="80"/>
+                    </HBox>
+
+                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                                hbarPolicy="NEVER" styleClass="admin-table-scroll">
+                        <VBox fx:id="vboxPesananRows" styleClass="admin-table-body" spacing="0"/>
+                    </ScrollPane>
+                </VBox>
+
+                <VBox styleClass="admin-warning-card" minWidth="220" maxWidth="240" spacing="10">
+                    <padding><Insets top="16" bottom="16" left="16" right="16"/></padding>
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label text="⚠" styleClass="admin-warning-icon"/>
+                        <Label text="Peringatan Stok Rendah" styleClass="admin-warning-title" wrapText="true"/>
+                    </HBox>
+                    <Label fx:id="lblJmlStokRendah" text="Memuat..." styleClass="admin-warning-sub" wrapText="true"/>
+                    <VBox fx:id="vboxStokRendah" spacing="4"/>
+                </VBox>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>
