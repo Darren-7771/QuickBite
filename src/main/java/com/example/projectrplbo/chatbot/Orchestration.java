@@ -12,90 +12,146 @@ import java.util.regex.Pattern;
 public class Orchestration {
 
     private String intent;
-
     private final Retrieval retrieval;
 
     private ConversationState state = ConversationState.AWAL;
 
     private final Map<String, int[]> keranjang = new LinkedHashMap<>();
     private final Map<String, Menu> menuCache = new HashMap<>();
+    private List<String> kategoriTersedia = new ArrayList<>();
+
+    private final Map<String, List<String>> intentPatterns = new HashMap<>();
 
     private static final Pattern PATTERN_ID_MENU =
-        Pattern.compile("\\b([A-Z]{3}\\d{5})\\b", Pattern.CASE_INSENSITIVE);
+        Pattern.compile("\\b([A-Za-z]{3}\\d{5})\\b", Pattern.CASE_INSENSITIVE);
+
     private static final Pattern PATTERN_JUMLAH =
         Pattern.compile("\\b(\\d+)\\b");
-    private static final Pattern PATTERN_PESAN =
-        Pattern.compile("(?i)^PESAN\\s+(\\d+\\s+)?([A-Z]{3}\\d{5})$", Pattern.CASE_INSENSITIVE);
-    private static final Pattern PATTERN_CARI =
-        Pattern.compile("(?i)^CARI\\s+(.+)$", Pattern.CASE_INSENSITIVE);
 
-    private static final List<String> KEYWORDS_MENU = List.of("menu", "daftar", "makanan", "apa saja", "lihat menu", "tampilkan menu");
-    private static final List<String> KEYWORDS_STATUS = List.of("status", "riwayat", "pesanan saya", "history", "cek pesanan");
-    private static final List<String> KEYWORDS_KONFIRMASI = List.of("ya", "iya", "yep", "oke", "ok", "benar", "konfirmasi", "pesan", "lanjut");
-    private static final List<String> KEYWORDS_BATAL = List.of("batal", "cancel", "tidak", "ga", "gak", "jangan", "hapus");
-    private static final List<String> KEYWORDS_SALAM = List.of("halo", "hai", "hello", "hi", "selamat", "pagi", "siang", "malam", "sore");
-    private static final List<String> KEYWORDS_BANTUAN = List.of("bantuan", "help", "cara", "bisa apa", "panduan", "?");
+    private static final Pattern PATTERN_CARI_EXPLICIT =
+        Pattern.compile("(?i)^cari\\s+(.+)$");
+
+    private static final Map<String, String> KATA_KE_KATEGORI = Map.of(
+        "ayam",    "Ayam",
+        "chicken", "Ayam",
+        "burger",  "Burger",
+        "minuman", "Minuman",
+        "minum",   "Minuman",
+        "drink",   "Minuman",
+        "snack",   "Snack",
+        "camilan", "Snack",
+        "makanan ringan", "Snack"
+    );
 
     public Orchestration() {
         this.retrieval = new Retrieval();
         loadMenuCache();
+        loadKategori();
+        loadIntentPatterns();
     }
 
     private void loadMenuCache() {
         retrieval.getAllMenu().forEach(m -> menuCache.put(m.getIdMenu().toUpperCase(), m));
     }
 
+    private void loadKategori() {
+        kategoriTersedia = retrieval.getAllKategori();
+    }
+
+    private void loadIntentPatterns() {
+        for (Intent i : Intent.values()) {
+            List<String> patterns = retrieval.getPatternsByIntent(i.name());
+            patterns.sort((a, b) -> Integer.compare(b.length(), a.length()));
+            intentPatterns.put(i.name(), patterns);
+        }
+    }
+
     public void analyzeIntent(String input) {
-        String normalized = input.trim().toUpperCase();
         String lower = input.trim().toLowerCase();
 
-        if (normalized.equals("MENU"))                        { intent = Intent.LIHAT_MENU.name(); return; }
-        if (normalized.startsWith("CARI "))                   { intent = Intent.CARI_MENU_KATEGORI.name(); return; }
-        if (normalized.equals("STATUS"))                      { intent = Intent.RIWAYAT_PESANAN.name(); return; }
-        if (normalized.equals("BATAL"))                       { intent = Intent.BATAL_PESANAN.name(); return; }
-        if (PATTERN_PESAN.matcher(normalized).matches())      { intent = Intent.PESAN_MENU.name(); return; }
-
-        if (state == ConversationState.PILIH_MENU && PATTERN_ID_MENU.matcher(normalized).find()) {
-            intent = Intent.TAMBAH_ITEM.name(); return;
+        if (state == ConversationState.PILIH_MENU
+                && PATTERN_ID_MENU.matcher(input).find()) {
+            intent = Intent.TAMBAH_ITEM.name();
+            return;
         }
 
-        if (KEYWORDS_SALAM.stream().anyMatch(lower::contains))     { intent = Intent.SALAM.name(); return; }
-        if (KEYWORDS_BANTUAN.stream().anyMatch(lower::contains))   { intent = Intent.BANTUAN.name(); return; }
-        if (KEYWORDS_MENU.stream().anyMatch(lower::contains))      { intent = Intent.LIHAT_MENU.name(); return; }
-        if (KEYWORDS_STATUS.stream().anyMatch(lower::contains))    { intent = Intent.RIWAYAT_PESANAN.name(); return; }
-        if (KEYWORDS_BATAL.stream().anyMatch(lower::contains))     { intent = Intent.BATAL_PESANAN.name(); return; }
-        if (KEYWORDS_KONFIRMASI.stream().anyMatch(lower::contains)
-                && (state == ConversationState.KONFIRMASI || state == ConversationState.PILIH_MENU)) {
-            intent = Intent.KONFIRMASI_PESANAN.name(); return;
+        if (state == ConversationState.KONFIRMASI
+                || state == ConversationState.PILIH_MENU) {
+            if (matchesAnyPattern(lower, Intent.KONFIRMASI_PESANAN.name())) {
+                intent = Intent.KONFIRMASI_PESANAN.name();
+                return;
+            }
         }
 
-        if (lower.contains("stok") && PATTERN_ID_MENU.matcher(normalized).find()) {
-            intent = Intent.TANYA_STOK.name(); return;
+        if (matchesAnyPattern(lower, Intent.BATAL_PESANAN.name())) {
+            intent = Intent.BATAL_PESANAN.name();
+            return;
+        }
+
+        String[] intentOrder = {
+            Intent.LIHAT_PESANAN_SEMENTARA.name(),
+            Intent.RIWAYAT_PESANAN.name(),
+            Intent.TANYA_STOK.name(),
+            Intent.PESAN_MENU.name(),
+            Intent.CARI_MENU_KATEGORI.name(),
+            Intent.LIHAT_MENU.name(),
+            Intent.BANTUAN.name(),
+            Intent.SALAM.name()
+        };
+
+        for (String intentName : intentOrder) {
+            if (matchesAnyPattern(lower, intentName)) {
+                intent = intentName;
+                return;
+            }
         }
 
         intent = Intent.TIDAK_DIKENALI.name();
+    }
+
+    private boolean matchesAnyPattern(String lowerInput, String intentName) {
+        List<String> patterns = intentPatterns.getOrDefault(intentName, List.of());
+        return patterns.stream().anyMatch(lowerInput::contains);
     }
 
     public Entity extractEntity(String input) {
         Entity entity = new Entity();
         entity.setRawInput(input);
         String upper = input.trim().toUpperCase();
+        String lower = input.trim().toLowerCase();
 
         Matcher mId = PATTERN_ID_MENU.matcher(upper);
         if (mId.find()) {
             entity.setIdMenu(mId.group(1).toUpperCase());
         }
 
-        String withoutId = upper.replaceAll("[A-Z]{3}\\d{5}", "").replaceAll("[A-Z]+", "").trim();
-        Matcher mJml = PATTERN_JUMLAH.matcher(withoutId);
+        String tanpaId = upper.replaceAll("[A-Z]{3}\\d{5}", "")
+                              .replaceAll("[A-Z]+", "").trim();
+        Matcher mJml = PATTERN_JUMLAH.matcher(tanpaId);
         if (mJml.find()) {
-            try { entity.setJumlah(Integer.parseInt(mJml.group(1))); } catch (NumberFormatException e) { }
+            try { entity.setJumlah(Integer.parseInt(mJml.group(1))); }
+            catch (NumberFormatException ignored) { }
         }
 
-        Matcher mCari = PATTERN_CARI.matcher(input.trim());
+        Matcher mCari = PATTERN_CARI_EXPLICIT.matcher(input.trim());
         if (mCari.matches()) {
             String kat = mCari.group(1).trim();
-            entity.setKategori(kat.substring(0, 1).toUpperCase() + kat.substring(1).toLowerCase());
+            entity.setKategori(capitalize(kat));
+        } else {
+            for (Map.Entry<String, String> entry : KATA_KE_KATEGORI.entrySet()) {
+                if (lower.contains(entry.getKey())) {
+                    entity.setKategori(entry.getValue());
+                    break;
+                }
+            }
+            if (entity.getKategori() == null) {
+                for (String kat : kategoriTersedia) {
+                    if (lower.contains(kat.toLowerCase())) {
+                        entity.setKategori(kat);
+                        break;
+                    }
+                }
+            }
         }
 
         return entity;
@@ -108,19 +164,25 @@ public class Orchestration {
 
         analyzeIntent(input);
         Entity entity = extractEntity(input);
-        Intent intentEnum = Intent.valueOf(intent);
+        Intent intentEnum;
+        try {
+            intentEnum = Intent.valueOf(intent);
+        } catch (IllegalArgumentException e) {
+            intentEnum = Intent.TIDAK_DIKENALI;
+        }
 
         return switch (intentEnum) {
-            case SALAM          -> handleSalam(pengguna);
-            case BANTUAN        -> handleBantuan();
-            case LIHAT_MENU     -> handleLihatMenu();
-            case CARI_MENU_KATEGORI -> handleCariMenu(entity);
-            case TANYA_STOK     -> handleTanyaStok(entity);
+            case SALAM                   -> handleSalam(pengguna);
+            case BANTUAN                 -> handleBantuan();
+            case LIHAT_MENU              -> handleLihatMenu();
+            case CARI_MENU_KATEGORI      -> handleCariMenu(entity, input);
+            case TANYA_STOK              -> handleTanyaStok(entity);
             case PESAN_MENU, TAMBAH_ITEM -> handlePesanMenu(entity, pengguna);
-            case KONFIRMASI_PESANAN -> handleKonfirmasiPesanan(pengguna);
-            case BATAL_PESANAN  -> handleBatalPesanan();
-            case RIWAYAT_PESANAN -> handleRiwayatPesanan(pengguna);
-            default             -> handleTidakDikenali();
+            case KONFIRMASI_PESANAN      -> handleKonfirmasiPesanan(pengguna);
+            case BATAL_PESANAN           -> handleBatalPesanan();
+            case RIWAYAT_PESANAN         -> handleRiwayatPesanan(pengguna);
+            case LIHAT_PESANAN_SEMENTARA -> handleLihatKeranjang();
+            default                      -> handleTidakDikenali();
         };
     }
 
@@ -130,22 +192,27 @@ public class Orchestration {
 
     private Response handleSalam(Pengguna p) {
         String msg = "👋 Halo, " + p.getNama() + "! Selamat datang di QuickBite!\n\n"
-            + "Saya siap membantu Anda memesan makanan.\n"
-            + "Ketik *MENU* untuk melihat daftar menu lengkap, atau gunakan perintah di bawah ini.";
+            + "Saya siap membantu Anda memesan makanan favorit Anda.\n"
+            + "Tanyakan menu, cari berdasarkan kategori, atau langsung pesan!";
         return Response.ok(msg, null);
     }
 
     private Response handleBantuan() {
+        String kategoriStr = kategoriTersedia.isEmpty() ? "Ayam, Burger, Minuman, Snack"
+            : String.join(", ", kategoriTersedia);
         String msg = """
-            📖 *Panduan Perintah QuickBite:*
+            📖 *Panduan QuickBite:*
 
-            > Ketik *MENU* untuk melihat daftar menu lengkap
-            > Ketik *CARI [Kategori]* untuk mencari menu (contoh: CARI Ayam)
-            > Ketik *PESAN [ID Menu]* untuk memesan (contoh: PESAN MKN00001)
-            > Ketik *PESAN [Jumlah] [ID Menu]* untuk memesan banyak (contoh: PESAN 2 MKN00001)
-            > Ketik *STATUS* untuk melihat riwayat pesanan
-            > Ketik *BATAL* untuk membatalkan pesanan sementara
-            """;
+            > Tanya menu  — "Menu apa saja yang tersedia?"
+            > Cari kategori — "Ada menu ayam apa?" / "Tampilkan burger"
+            > Pesan — "Saya mau pesan MKN00001" / "Pesan 2 MKN00001"
+            > Cek stok — "Masih ada MKN00001?" / "Cek stok MKN00001"
+            > Keranjang — "Lihat keranjang saya" / "Berapa totalnya?"
+            > Riwayat — "Pesanan saya" / "Lihat history order"
+            > Batalkan — "Batalkan pesanan" / "Tidak jadi"
+            > Konfirmasi — "Ya, lanjut" / "Konfirmasi pesanan"
+
+            Kategori tersedia: """ + kategoriStr;
         return Response.ok(msg, null);
     }
 
@@ -164,36 +231,55 @@ public class Orchestration {
             sb.append(String.format("• *%s* - %s%n  Rp %,.0f | Stok: %d%n",
                 m.getIdMenu(), m.getNamaMenu(), m.getHarga(), m.getStok()));
         }
-        sb.append("\nKetik *PESAN [ID Menu]* untuk memesan.");
+        sb.append("\nTanyakan: \"Saya mau pesan [ID Menu]\"");
         menuCache.clear();
         menus.forEach(m -> menuCache.put(m.getIdMenu().toUpperCase(), m));
         return Response.ok(sb.toString(), menus);
     }
 
-    private Response handleCariMenu(Entity entity) {
+    private Response handleCariMenu(Entity entity, String rawInput) {
         if (entity.getKategori() == null) {
-            return Response.badRequest("Format: CARI [Kategori]. Contoh: CARI Ayam");
+            String lower = rawInput.toLowerCase();
+            for (String kat : kategoriTersedia) {
+                if (lower.contains(kat.toLowerCase())) {
+                    entity.setKategori(kat);
+                    break;
+                }
+            }
+        }
+        if (entity.getKategori() == null) {
+            String daftar = kategoriTersedia.isEmpty() ? "Ayam, Burger, Minuman, Snack"
+                : String.join(", ", kategoriTersedia);
+            return Response.badRequest(
+                "Sebutkan kategori yang ingin dicari.\n"
+                + "Contoh: \"Ada menu ayam apa?\" atau \"Tampilkan burger\"\n"
+                + "Kategori tersedia: " + daftar);
         }
         List<Menu> menus = retrieval.getMenuByKategori(entity.getKategori());
         if (menus.isEmpty()) {
+            String daftar = String.join(", ", kategoriTersedia);
             return Response.notFound("😕 Tidak ada menu untuk kategori *" + entity.getKategori() + "*.\n"
-                + "Coba kategori lain: Ayam, Burger, Minuman, Snack.");
+                + "Kategori tersedia: " + daftar);
         }
-        StringBuilder sb = new StringBuilder("🔍 *Hasil pencarian: " + entity.getKategori() + "*\n\n");
+        StringBuilder sb = new StringBuilder("🔍 *Hasil: " + entity.getKategori() + "*\n\n");
         for (Menu m : menus) {
             sb.append(String.format("• *%s* - %s%n  Rp %,.0f | Stok: %d%n",
                 m.getIdMenu(), m.getNamaMenu(), m.getHarga(), m.getStok()));
         }
-        sb.append("\nKetik *PESAN [ID Menu]* untuk memesan.");
+        sb.append("\nTanyakan: \"Saya mau pesan [ID Menu]\"");
         return Response.ok(sb.toString(), menus);
     }
 
     private Response handleTanyaStok(Entity entity) {
         if (entity.getIdMenu() == null) {
-            return Response.badRequest("Silakan masukkan ID menu. Contoh: stok MKN00001");
+            return Response.badRequest(
+                "Sebutkan ID menu yang ingin dicek stoknya.\n"
+                + "Contoh: \"Masih ada MKN00001?\" atau \"Cek stok MKN00001\"");
         }
         int stok = retrieval.checkStok(entity.getIdMenu());
-        if (stok < 0) return Response.notFound("❌ Menu dengan ID *" + entity.getIdMenu() + "* tidak ditemukan.");
+        if (stok < 0) {
+            return Response.notFound("❌ Menu dengan ID *" + entity.getIdMenu() + "* tidak ditemukan.");
+        }
         Menu m = menuCache.get(entity.getIdMenu().toUpperCase());
         String nama = (m != null) ? m.getNamaMenu() : entity.getIdMenu();
         if (stok == 0) {
@@ -204,22 +290,28 @@ public class Orchestration {
 
     private Response handlePesanMenu(Entity entity, Pengguna pengguna) {
         if (entity.getIdMenu() == null) {
-            return Response.badRequest("Format salah. Gunakan: PESAN [ID Menu] atau PESAN [Jumlah] [ID Menu]\nContoh: PESAN MKN00001 atau PESAN 2 MKN00001");
+            return Response.badRequest(
+                "Sebutkan ID menu yang ingin dipesan.\n"
+                + "Contoh: \"Saya mau pesan MKN00001\" atau \"Pesan 2 MKN00001\"\n"
+                + "Ketik menu untuk melihat daftar ID menu.");
         }
         String id = entity.getIdMenu().toUpperCase();
         Menu menu = menuCache.get(id);
         if (menu == null) {
             menu = retrieval.getMenuById(id);
-            if (menu == null) return Response.notFound("❌ Menu *" + id + "* tidak ditemukan. Ketik MENU untuk melihat daftar.");
+            if (menu == null) {
+                return Response.notFound("❌ Menu *" + id + "* tidak ditemukan. Tanyakan \"menu apa saja\" untuk melihat daftar.");
+            }
             menuCache.put(id, menu);
         }
         int stok = retrieval.checkStok(id);
-        int req = entity.getJumlah();
+        int req  = entity.getJumlah();
         if (stok <= 0) {
             return Response.badRequest("⚠️ Maaf, *" + menu.getNamaMenu() + "* stoknya habis!");
         }
         if (req > stok) {
-            return Response.badRequest("⚠️ Stok *" + menu.getNamaMenu() + "* tidak mencukupi. Tersedia: " + stok + " porsi.");
+            return Response.badRequest("⚠️ Stok *" + menu.getNamaMenu()
+                + "* tidak mencukupi. Tersedia: " + stok + " porsi.");
         }
         if (keranjang.containsKey(id)) {
             keranjang.get(id)[0] += req;
@@ -229,16 +321,24 @@ public class Orchestration {
         state = ConversationState.KONFIRMASI;
 
         StringBuilder sb = new StringBuilder("🛒 *" + menu.getNamaMenu() + "* x" + req + " ditambahkan!\n\n");
-        sb.append("*Pesanan sementara:*\n");
         sb.append(formatKeranjang());
-        sb.append("\n\nKetik *PESAN [ID]* untuk tambah item lagi, atau ketik *YA* / *OK* / *LANJUT* untuk konfirmasi pesanan, atau *BATAL* untuk membatalkan.");
+        sb.append("\n\nIngin tambah lagi? Katakan \"Saya mau pesan [ID Menu]\" lagi.\n"
+            + "Atau katakan \"Ya, lanjut\" untuk konfirmasi, \"Batalkan\" untuk membatalkan.");
         return Response.ok(sb.toString(), keranjang);
+    }
+
+    private Response handleLihatKeranjang() {
+        if (keranjang.isEmpty()) {
+            return Response.ok("Keranjang Anda kosong.\nTanyakan \"menu apa saja\" untuk mulai memilih.", null);
+        }
+        return Response.ok("🛒 *Pesanan sementara Anda:*\n\n" + formatKeranjang()
+            + "\n\nKatakan \"Ya, konfirmasi\" untuk memesan atau \"Batalkan\" untuk membatalkan.", keranjang);
     }
 
     private Response handleKonfirmasiPesanan(Pengguna pengguna) {
         if (keranjang.isEmpty()) {
             state = ConversationState.AWAL;
-            return Response.badRequest("Keranjang Anda kosong. Ketik MENU untuk mulai memesan.");
+            return Response.badRequest("Keranjang Anda kosong. Tanyakan \"menu apa saja\" untuk mulai memesan.");
         }
         Pesanan pesanan = new Pesanan();
         pesanan.setTanggal(LocalDateTime.now());
@@ -249,12 +349,11 @@ public class Orchestration {
         for (Map.Entry<String, int[]> entry : keranjang.entrySet()) {
             Menu m = menuCache.get(entry.getKey());
             if (m == null) continue;
-            int jml = entry.getValue()[0];
-            double subtotal = m.getHarga() * jml;
-            total += subtotal;
+            int jml       = entry.getValue()[0];
+            double sub    = m.getHarga() * jml;
+            total        += sub;
             Pesanan.DetailPesanan detail = new Pesanan.DetailPesanan(
-                pesanan.getIdPesanan(), entry.getKey(), jml, subtotal
-            );
+                pesanan.getIdPesanan(), entry.getKey(), jml, sub);
             detail.setNamaMenu(m.getNamaMenu());
             detail.setHargaSatuan(m.getHarga());
             pesanan.addDetail(detail);
@@ -268,7 +367,6 @@ public class Orchestration {
         for (Pesanan.DetailPesanan d : pesanan.getDetails()) {
             d.setIdPesanan(pesanan.getIdPesanan());
         }
-
         keranjang.clear();
         state = ConversationState.AWAL;
 
@@ -288,11 +386,11 @@ public class Orchestration {
 
     private Response handleBatalPesanan() {
         if (keranjang.isEmpty() && state == ConversationState.AWAL) {
-            return Response.ok("Tidak ada pesanan aktif untuk dibatalkan.", null);
+            return Response.ok("Tidak ada pesanan aktif untuk dibatalkan.\nTanyakan \"menu apa saja\" untuk mulai memesan.", null);
         }
         keranjang.clear();
         state = ConversationState.AWAL;
-        return Response.ok("🚫 Pesanan dibatalkan. Keranjang dikosongkan.\nKetik MENU untuk mulai pesan kembali.", null);
+        return Response.ok("🚫 Pesanan dibatalkan. Keranjang dikosongkan.\nTanyakan \"menu apa saja\" untuk mulai pesan kembali.", null);
     }
 
     private Response handleRiwayatPesanan(Pengguna pengguna) {
@@ -310,35 +408,43 @@ public class Orchestration {
     }
 
     private Response handleTidakDikenali() {
-        if (state == ConversationState.PILIH_MENU) {
-            return Response.badRequest("Saya tidak mengerti. Apakah Anda ingin:\n"
-                + "• Tambah item? Ketik *PESAN [ID Menu]*\n"
-                + "• Konfirmasi? Ketik *YA*\n"
-                + "• Batalkan? Ketik *BATAL*");
+        if (state == ConversationState.PILIH_MENU || state == ConversationState.KONFIRMASI) {
+            return Response.badRequest(
+                "Saya tidak mengerti. Apakah maksud Anda:\n"
+                + "• Tambah item? — \"Saya mau pesan [ID Menu]\"\n"
+                + "• Konfirmasi? — \"Ya, lanjutkan pesanan\"\n"
+                + "• Batalkan? — \"Batalkan pesanan saya\"");
         }
-        return Response.badRequest("🤔 Maaf, saya tidak mengerti perintah itu.\n"
-            + "Ketik *BANTUAN* atau *HELP* untuk melihat daftar perintah.");
+        return Response.badRequest(
+            "🤔 Maaf, saya belum memahami pertanyaan Anda.\n"
+            + "Coba tanyakan: \"Bantuan\" atau \"Panduan\" untuk melihat cara penggunaan.");
     }
 
     private String formatKeranjang() {
         if (keranjang.isEmpty()) return "_(kosong)_";
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder("*Pesanan sementara:*\n");
         double total = 0;
         for (Map.Entry<String, int[]> entry : keranjang.entrySet()) {
             Menu m = menuCache.get(entry.getKey());
             if (m == null) continue;
-            int jml = entry.getValue()[0];
-            double subtotal = m.getHarga() * jml;
-            total += subtotal;
-            sb.append(String.format("  • %s x%d = Rp %,.0f%n", m.getNamaMenu(), jml, subtotal));
+            int jml       = entry.getValue()[0];
+            double sub    = m.getHarga() * jml;
+            total        += sub;
+            sb.append(String.format("  • %s x%d = Rp %,.0f%n", m.getNamaMenu(), jml, sub));
         }
         sb.append(String.format("  ━━━━━━━━━━━━%n  *Total: Rp %,.0f*", total));
         return sb.toString();
     }
 
-    public ConversationState getState() { return state; }
-    public void setState(ConversationState state) { this.state = state; }
-    public Map<String, int[]> getKeranjang() { return keranjang; }
-    public String getIntent() { return intent; }
-    public Map<String, Menu> getMenuCache() { return menuCache; }
+    private String capitalize(String s) {
+        if (s == null || s.isBlank()) return s;
+        return s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
+    }
+
+    public ConversationState getState()                    { return state; }
+    public void setState(ConversationState state)          { this.state = state; }
+    public Map<String, int[]> getKeranjang()               { return keranjang; }
+    public String getIntent()                              { return intent; }
+    public Map<String, Menu> getMenuCache()                { return menuCache; }
+    public Map<String, List<String>> getIntentPatterns()   { return intentPatterns; }
 }

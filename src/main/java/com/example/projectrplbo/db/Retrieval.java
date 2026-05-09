@@ -341,6 +341,45 @@ public class Retrieval {
         return false;
     }
 
+    public List<String> getPatternsByIntent(String intent) {
+        List<String> list = new ArrayList<>();
+        String sql = "SELECT pola FROM Pattern_Intent WHERE intent = ? ORDER BY id_pattern";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, intent);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(rs.getString("pola").toLowerCase().trim());
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getPatternsByIntent: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<String> getAllIntents() {
+        List<String> list = new ArrayList<>();
+        String sql = "SELECT DISTINCT intent FROM Pattern_Intent";
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) list.add(rs.getString("intent"));
+        } catch (SQLException e) {
+            System.err.println("Error getAllIntents: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public List<String> getAllKategori() {
+        List<String> list = new ArrayList<>();
+        String sql = "SELECT DISTINCT kategori FROM Menu ORDER BY kategori";
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) list.add(rs.getString("kategori"));
+        } catch (SQLException e) {
+            System.err.println("Error getAllKategori: " + e.getMessage());
+        }
+        return list;
+    }
+
     public Response createResponse(int status, String msg, Object data) {
         return new Response(status, msg, data);
     }
