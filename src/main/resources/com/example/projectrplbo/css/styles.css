@@ -1461,7 +1461,7 @@
     -fx-background-radius: 10;
 }
 
-.jamop-status-circle {
+.jamop-status-circle-open {
     -fx-background-color: #10B981;
     -fx-background-radius: 50;
     -fx-min-width: 40;
@@ -1470,21 +1470,42 @@
     -fx-max-height: 40;
 }
 
-.jamop-status-check {
+.jamop-status-circle-closed {
+    -fx-background-color: #E8453C;
+    -fx-background-radius: 50;
+    -fx-min-width: 40;
+    -fx-min-height: 40;
+    -fx-max-width: 40;
+    -fx-max-height: 40;
+}
+
+.jamop-status-icon {
     -fx-text-fill: white;
     -fx-font-size: 20px;
     -fx-font-weight: bold;
 }
 
-.jamop-status-title {
+.jamop-status-title,
+.jamop-status-title-open {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-text-fill: #065F46;
 }
 
+.jamop-status-title-closed {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #E8453C;
+}
+
 .jamop-status-desc {
     -fx-font-size: 12px;
     -fx-text-fill: #6B7280;
+}
+
+.jamop-status-desc-closed {
+    -fx-font-size: 12px;
+    -fx-text-fill: #B91C1C;
 }
 
 .jamop-status-label-small {

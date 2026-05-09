@@ -92,8 +92,8 @@
                         <HBox fx:id="hboxStatusBanner" styleClass="jamop-status-banner-open"
                               alignment="CENTER_LEFT" spacing="16">
                             <padding><Insets top="16" bottom="16" left="20" right="20"/></padding>
-                            <StackPane styleClass="jamop-status-circle">
-                                <Label text="✓" styleClass="jamop-status-check"/>
+                            <StackPane fx:id="statusIconCircle" styleClass="jamop-status-circle-open">
+                                <Label fx:id="lblStatusIcon" text="✓" styleClass="jamop-status-icon"/>
                             </StackPane>
                             <VBox spacing="2" HBox.hgrow="ALWAYS">
                                 <Label fx:id="lblStatusSistem" text="SISTEM AKTIF" styleClass="jamop-status-title"/>

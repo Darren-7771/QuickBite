@@ -10,6 +10,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 import java.time.LocalTime;
@@ -24,6 +25,8 @@ public class AdminJamOperasionalController {
     @FXML private Label lblStatusSistem;
     @FXML private Label lblStatusDesc;
     @FXML private Label lblStatusOpenClose;
+    @FXML private Label lblStatusIcon;
+    @FXML private StackPane statusIconCircle;
     @FXML private HBox hboxStatusBanner;
     @FXML private Label lblError;
 
@@ -58,14 +61,24 @@ public class AdminJamOperasionalController {
         boolean open = jadwal.isOperasional();
         if (open) {
             hboxStatusBanner.getStyleClass().setAll("jamop-status-banner-open");
+            statusIconCircle.getStyleClass().setAll("jamop-status-circle-open");
+            lblStatusIcon.setText("✓");
+            lblStatusIcon.getStyleClass().setAll("jamop-status-icon");
             lblStatusSistem.setText("SISTEM AKTIF");
+            lblStatusSistem.getStyleClass().setAll("jamop-status-title-open");
             lblStatusDesc.setText("Chatbot sedang beroperasi");
+            lblStatusDesc.getStyleClass().setAll("jamop-status-desc");
             lblStatusOpenClose.setText("OPEN");
             lblStatusOpenClose.getStyleClass().setAll("jamop-status-open");
         } else {
             hboxStatusBanner.getStyleClass().setAll("jamop-status-banner-closed");
+            statusIconCircle.getStyleClass().setAll("jamop-status-circle-closed");
+            lblStatusIcon.setText("✕");
+            lblStatusIcon.getStyleClass().setAll("jamop-status-icon");
             lblStatusSistem.setText("SISTEM TIDAK AKTIF");
+            lblStatusSistem.getStyleClass().setAll("jamop-status-title-closed");
             lblStatusDesc.setText("Chatbot tidak beroperasi saat ini");
+            lblStatusDesc.getStyleClass().setAll("jamop-status-desc-closed");
             lblStatusOpenClose.setText("CLOSED");
             lblStatusOpenClose.getStyleClass().setAll("jamop-status-closed");
         }
