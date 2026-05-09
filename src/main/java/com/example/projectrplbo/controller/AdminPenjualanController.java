@@ -35,7 +35,7 @@ public class AdminPenjualanController {
     @FXML private Button    btnNext;
     @FXML private HBox      hboxPageNumbers;
     @FXML private StackPane modalOverlay;
-    @FXML private BorderPane mainPane;           // untuk efek blur
+    @FXML private BorderPane mainPane;
     @FXML private Label lblModalIdTransaksi;
     @FXML private Label lblModalNama;
     @FXML private Label lblModalWaktu;
