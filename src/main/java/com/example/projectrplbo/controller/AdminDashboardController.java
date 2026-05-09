@@ -144,13 +144,17 @@ public class AdminDashboardController {
     }
 
     @FXML
-    private void handleNavJamOp() {
-
+    private void handleNavJamOp() throws IOException {
+        AdminJamOperasionalController ctrl = MainApp.loadSceneWithController(
+            "admin-jam-operasional-view.fxml", "QuickBite Admin - Jam Operasional", 1100, 700);
+        ctrl.initData(admin);
     }
 
     @FXML
-    private void handleNavAkun() {
-
+    private void handleNavAkun() throws IOException {
+        AdminAkunController ctrl = MainApp.loadSceneWithController(
+            "admin-akun-view.fxml", "QuickBite Admin - Manajemen Akun", 1100, 700);
+        ctrl.initData(admin);
     }
 
     @FXML
