@@ -80,7 +80,6 @@
                 <HBox alignment="CENTER_LEFT" styleClass="admin-content-header">
                     <padding><Insets top="28" bottom="20" left="32" right="32"/></padding>
                     <Label text="Selamat Datang Kembali, Admin" styleClass="admin-page-title" HBox.hgrow="ALWAYS"/>
-                    <TextField promptText="Search" styleClass="admin-search-field" prefWidth="200"/>
                 </HBox>
 
                 <HBox spacing="20" styleClass="admin-stat-row">

@@ -125,7 +125,7 @@
                         <HBox alignment="CENTER_LEFT" spacing="12">
                             <VBox spacing="2" HBox.hgrow="ALWAYS">
                                 <Label text="Riwayat Pemesanan" styleClass="admin-card-title"/>
-                                <Label text="Menampilkan 10 pesanan terakhir (Database Limitation 4.1)"
+                                <Label text="Menampilkan 10 pesanan terakhir"
                                        styleClass="admin-penjualan-table-sub"/>
                             </VBox>
                             <HBox styleClass="admin-search-box" alignment="CENTER_LEFT" spacing="8"
