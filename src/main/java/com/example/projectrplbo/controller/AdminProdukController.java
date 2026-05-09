@@ -29,6 +29,7 @@ public class AdminProdukController {
     @FXML private Label lblPagingInfo;
     @FXML private Button btnPrev;
     @FXML private Button btnNext;
+    @FXML private HBox hboxPageNumbers;
     @FXML private VBox panelFormMenu;
     @FXML private Label lblFormJudul;
     @FXML private TextField tfFormIdMenu;
@@ -85,9 +86,9 @@ public class AdminProdukController {
 
     private void muatPanelStokRendah() {
         List<Menu> rendah = semuaMenu.stream()
-            .filter(m -> m.getStok() <= STOK_RENDAH_THRESHOLD)
-            .sorted(Comparator.comparingInt(Menu::getStok))
-            .collect(Collectors.toList());
+                .filter(m -> m.getStok() <= STOK_RENDAH_THRESHOLD)
+                .sorted(Comparator.comparingInt(Menu::getStok))
+                .collect(Collectors.toList());
 
         lblJmlStokRendah.setText(rendah.size() + " produk memiliki stok rendah atau habis");
         lblTotalProduk.setText(String.valueOf(semuaMenu.size()));
@@ -95,8 +96,8 @@ public class AdminProdukController {
         vboxStokRendahList.getChildren().clear();
         for (Menu m : rendah) {
             String teks = m.getStok() == 0
-                ? m.getNamaMenu() + " (stok habis)"
-                : m.getNamaMenu() + " (" + m.getStok() + " tersisa)";
+                    ? m.getNamaMenu() + " (stok habis)"
+                    : m.getNamaMenu() + " (" + m.getStok() + " tersisa)";
             Label lbl = new Label("• " + teks);
             lbl.getStyleClass().add("admin-stok-item");
             lbl.setWrapText(true);
@@ -120,6 +121,18 @@ public class AdminProdukController {
         lblPagingInfo.setText("Menampilkan " + (dari + 1) + "-" + sampai + " dari " + total + " produk");
         btnPrev.setDisable(halamanSaat == 0);
         btnNext.setDisable(halamanSaat >= totalHalaman - 1);
+
+
+        if (hboxPageNumbers != null) {
+            hboxPageNumbers.getChildren().clear();
+            for (int i = 0; i < totalHalaman; i++) {
+                final int page = i;
+                Button btn = new Button(String.valueOf(i + 1));
+                btn.getStyleClass().add(i == halamanSaat ? "admin-btn-paging-active" : "admin-btn-paging");
+                btn.setOnAction(e -> { halamanSaat = page; renderHalaman(); });
+                hboxPageNumbers.getChildren().add(btn);
+            }
+        }
     }
 
     private HBox buatBarisProduk(Menu m) {
@@ -141,7 +154,7 @@ public class AdminProdukController {
         else                            lblStok.getStyleClass().add("admin-cell-text");
 
         String statusTeks = m.getStok() == 0 ? "Stok Habis"
-            : m.getStok() <= STOK_RENDAH_THRESHOLD ? "Stok Rendah" : "Tersedia";
+                : m.getStok() <= STOK_RENDAH_THRESHOLD ? "Stok Rendah" : "Tersedia";
         Label lblStatus = new Label(statusTeks);
         lblStatus.getStyleClass().add("admin-status-" + statusCssKey(statusTeks));
         lblStatus.setMinWidth(100);
@@ -174,7 +187,7 @@ public class AdminProdukController {
     private void bukaFormEdit(Menu m) {
         menuSedangDiedit = m;
         lblFormJudul.setText("Edit Menu");
-        tfFormIdMenu.setEditable(false); // ID tidak bisa diubah
+        tfFormIdMenu.setEditable(false);
         tfFormIdMenu.setText(m.getIdMenu());
         tfFormNama.setText(m.getNamaMenu());
         tfFormKategori.setText(m.getKategori());
@@ -251,7 +264,7 @@ public class AdminProdukController {
                 if (ok) muatSemua();
                 else {
                     Alert err = new Alert(Alert.AlertType.ERROR,
-                        "Gagal menghapus. Menu mungkin masih direferensikan oleh data pesanan.");
+                            "Gagal menghapus. Menu mungkin masih direferensikan oleh data pesanan.");
                     err.showAndWait();
                 }
             }
@@ -293,10 +306,10 @@ public class AdminProdukController {
             menuTerfilter = semuaMenu;
         } else {
             menuTerfilter = semuaMenu.stream()
-                .filter(m -> m.getNamaMenu().toLowerCase().contains(kata)
-                    || m.getKategori().toLowerCase().contains(kata)
-                    || m.getIdMenu().toLowerCase().contains(kata))
-                .collect(Collectors.toList());
+                    .filter(m -> m.getNamaMenu().toLowerCase().contains(kata)
+                            || m.getKategori().toLowerCase().contains(kata)
+                            || m.getIdMenu().toLowerCase().contains(kata))
+                    .collect(Collectors.toList());
         }
         halamanSaat = 0;
         renderHalaman();
@@ -312,7 +325,7 @@ public class AdminProdukController {
     @FXML
     private void handleNavDashboard() throws IOException {
         AdminDashboardController ctrl = MainApp.loadSceneWithController(
-            "admin-dashboard-view.fxml", "QuickBite Admin - Dashboard", 1100, 700);
+                "admin-dashboard-view.fxml", "QuickBite Admin - Dashboard", 1100, 700);
         ctrl.initData(admin);
     }
 
