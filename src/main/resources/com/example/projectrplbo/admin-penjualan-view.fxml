@@ -92,7 +92,7 @@
                             <padding><Insets top="20" bottom="20" left="20" right="20"/></padding>
                             <HBox alignment="CENTER_LEFT" spacing="12">
                                 <StackPane styleClass="admin-penjualan-stat-icon-box">
-                                    <Label text="🗂" styleClass="admin-penjualan-stat-icon"/>
+                                    <Label text="💳" styleClass="admin-penjualan-stat-icon"/>
                                 </StackPane>
                                 <Region HBox.hgrow="ALWAYS"/>
                                 <Label fx:id="lblPersenPendapatan" text="+12.5%" styleClass="admin-penjualan-badge-green"/>

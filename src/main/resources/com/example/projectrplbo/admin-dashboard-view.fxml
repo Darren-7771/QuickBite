@@ -89,7 +89,7 @@
                     <padding><Insets top="20" bottom="20" left="20" right="20"/></padding>
                     <HBox alignment="CENTER_LEFT" spacing="8">
                         <Label text="Total Penjualan Hari Ini" styleClass="admin-stat-label" HBox.hgrow="ALWAYS"/>
-                        <Label text="🗂" styleClass="admin-stat-icon"/>
+                        <Label text="💳" styleClass="admin-stat-icon"/>
                     </HBox>
                     <Label fx:id="lblTotalPenjualan" text="Rp 0" styleClass="admin-stat-value"/>
                 </VBox>
