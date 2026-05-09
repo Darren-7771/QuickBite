@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.example.projectrplbo.controller.ProfilController"
+           styleClass="modal-overlay"
+           stylesheets="@css/styles.css">
+    <VBox alignment="CENTER">
+        <VBox styleClass="modal-card" maxWidth="820" minWidth="720" spacing="0">
+            <padding><Insets top="36" bottom="36" left="48" right="48"/></padding>
+
+            <Region prefHeight="4"/>
+
+            <HBox spacing="48">
+
+                <VBox spacing="20" prefWidth="280">
+                    <HBox alignment="CENTER_LEFT" spacing="20">
+                        <StackPane styleClass="profil-foto-circle">
+                            <Label text="👤" styleClass="profil-foto-icon"/>
+                        </StackPane>
+                        <VBox spacing="4">
+                            <Label text="Foto Profil" styleClass="form-label"/>
+                            <Button text="Ubah Foto" styleClass="btn-outline-sm"/>
+                        </VBox>
+                    </HBox>
+
+                    <Separator/>
+
+
+                    <Label text="Informasi Akun" styleClass="section-title"/>
+
+                    <VBox spacing="6">
+                        <Label text="Username" styleClass="form-label"/>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <TextField fx:id="lblUsername" styleClass="form-input-disabled"
+                                       editable="false" HBox.hgrow="ALWAYS"/>
+                            <Label text="🔒" styleClass="lock-icon"/>
+                        </HBox>
+                        <Label text="Username tidak dapat diubah" styleClass="form-hint"/>
+                    </VBox>
+
+                    <VBox spacing="6">
+                        <Label text="Password" styleClass="form-label"/>
+                        <PasswordField fx:id="pfPasswordLama" promptText="Password saat ini"
+                                       styleClass="form-input" maxWidth="Infinity"/>
+                    </VBox>
+
+                    <VBox spacing="6">
+                        <Label text="Password Baru" styleClass="form-label"/>
+                        <PasswordField fx:id="pfPasswordBaru" promptText="Biarkan kosong jika tidak diubah"
+                                       styleClass="form-input" maxWidth="Infinity"/>
+                    </VBox>
+                </VBox>
+
+
+                <VBox spacing="16" HBox.hgrow="ALWAYS">
+                    <Label text="Informasi Pribadi" styleClass="section-title"/>
+
+                    <VBox spacing="6">
+                        <Label text="Nama Lengkap" styleClass="form-label"/>
+                        <TextField fx:id="tfNama" promptText="Nama lengkap"
+                                   styleClass="form-input" maxWidth="Infinity"/>
+                    </VBox>
+
+                    <VBox spacing="6">
+                        <Label text="Alamat" styleClass="form-label"/>
+                        <TextField fx:id="tfJalan" promptText="Jalan / Detail Alamat"
+                                   styleClass="form-input" maxWidth="Infinity"/>
+                    </VBox>
+
+                    <HBox spacing="12">
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Kota" styleClass="form-label"/>
+                            <TextField fx:id="tfKota" promptText="Kota"
+                                       styleClass="form-input" maxWidth="Infinity"/>
+                        </VBox>
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Provinsi" styleClass="form-label"/>
+                            <TextField fx:id="tfProvinsi" promptText="Provinsi"
+                                       styleClass="form-input" maxWidth="Infinity"/>
+                        </VBox>
+                        <VBox spacing="6" prefWidth="100">
+                            <Label text="Kode Pos" styleClass="form-label"/>
+                            <TextField fx:id="tfKodePos" promptText="00000"
+                                       styleClass="form-input" maxWidth="Infinity"/>
+                        </VBox>
+                    </HBox>
+
+                    <VBox spacing="6">
+                        <Label text="Email" styleClass="form-label"/>
+                        <TextField fx:id="tfEmail" promptText="Email"
+                                   styleClass="form-input" maxWidth="Infinity"/>
+                    </VBox>
+
+                    <VBox spacing="6">
+                        <Label text="Nomor Telepon" styleClass="form-label"/>
+                        <TextField fx:id="tfTelepon" promptText="+62 8xx-xxxx-xxxx"
+                                   styleClass="form-input" maxWidth="Infinity"/>
+                    </VBox>
+                </VBox>
+            </HBox>
+
+            <Region prefHeight="8"/>
+
+            <Label fx:id="lblError" styleClass="error-label" wrapText="true"
+                   visible="false" managed="false" maxWidth="Infinity"/>
+            <Region prefHeight="12"/>
+
+
+            <HBox spacing="12" alignment="CENTER_RIGHT">
+                <Button text="Batal" onAction="#handleBatal"
+                        styleClass="btn-outline" prefWidth="100" prefHeight="40"/>
+                <Button text="Simpan Perubahan" onAction="#handleSimpanPerubahan"
+                        styleClass="btn-primary" prefWidth="180" prefHeight="40"/>
+            </HBox>
+        </VBox>
+    </VBox>
+</StackPane>

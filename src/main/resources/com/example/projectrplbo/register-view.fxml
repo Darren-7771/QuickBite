@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.example.projectrplbo.controller.RegisterController"
+           styleClass="page-bg"
+           stylesheets="@css/styles.css">
+
+
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                styleClass="register-scroll-pane">
+        <VBox alignment="CENTER" minHeight="720" spacing="0">
+            <padding><Insets top="40" bottom="40" left="0" right="0"/></padding>
+
+
+            <VBox styleClass="card-white" maxWidth="740" minWidth="680" spacing="0"
+                  VBox.vgrow="NEVER">
+                <padding><Insets top="48" bottom="48" left="60" right="60"/></padding>
+
+                <Label text="Register Akun" styleClass="card-title"/>
+                <Label text="Daftarkan akun Anda untuk melanjutkan" styleClass="card-subtitle"/>
+                <Region prefHeight="28"/>
+
+
+                <HBox spacing="20">
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Nama Lengkap" styleClass="form-label"/>
+                        <TextField fx:id="tfNama" promptText="Masukkan nama lengkap Anda"
+                                   styleClass="form-input" maxWidth="Infinity"/>
+                    </VBox>
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Username" styleClass="form-label"/>
+                        <TextField fx:id="tfUsername" promptText="Masukkan username Anda"
+                                   styleClass="form-input" maxWidth="Infinity"/>
+                    </VBox>
+                </HBox>
+                <Region prefHeight="16"/>
+
+
+                <VBox spacing="6">
+                    <Label text="Email" styleClass="form-label"/>
+                    <TextField fx:id="tfEmail" promptText="Masukkan email Anda"
+                               styleClass="form-input" maxWidth="Infinity"/>
+                </VBox>
+                <Region prefHeight="16"/>
+
+
+                <VBox spacing="6">
+                    <Label text="Password" styleClass="form-label"/>
+                    <PasswordField fx:id="pfPassword" promptText="Masukkan password Anda"
+                                   styleClass="form-input" maxWidth="Infinity"/>
+                </VBox>
+                <Region prefHeight="16"/>
+
+
+                <VBox spacing="6">
+                    <Label text="No Telepon" styleClass="form-label"/>
+                    <TextField fx:id="tfTelepon" promptText="Masukkan no telepon Anda"
+                               styleClass="form-input" maxWidth="Infinity"/>
+                </VBox>
+                <Region prefHeight="16"/>
+
+
+                <VBox spacing="6">
+                    <Label text="Alamat (Jalan)" styleClass="form-label"/>
+                    <TextField fx:id="tfJalan" promptText="Masukkan alamat jalan Anda"
+                               styleClass="form-input" maxWidth="Infinity"/>
+                </VBox>
+                <Region prefHeight="16"/>
+
+
+                <HBox spacing="12">
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Kota" styleClass="form-label"/>
+                        <TextField fx:id="tfKota" promptText="Kota"
+                                   styleClass="form-input" maxWidth="Infinity"/>
+                    </VBox>
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Provinsi" styleClass="form-label"/>
+                        <TextField fx:id="tfProvinsi" promptText="Provinsi"
+                                   styleClass="form-input" maxWidth="Infinity"/>
+                    </VBox>
+                    <VBox spacing="6" prefWidth="120">
+                        <Label text="Kode Pos" styleClass="form-label"/>
+                        <TextField fx:id="tfKodePos" promptText="12345"
+                                   styleClass="form-input" maxWidth="Infinity"/>
+                    </VBox>
+                </HBox>
+                <Region prefHeight="6"/>
+
+
+                <Label fx:id="lblError" styleClass="error-label" wrapText="true"
+                       visible="false" managed="false" maxWidth="Infinity"/>
+                <Region prefHeight="10"/>
+
+
+                <Button text="Daftar sekarang  &#x2192;" onAction="#handleDaftar"
+                        styleClass="btn-primary" maxWidth="Infinity" prefHeight="46"/>
+                <Region prefHeight="12"/>
+
+
+                <Button text="Kembali Ke Halaman Login" onAction="#handleKembaliLogin"
+                        styleClass="btn-secondary" maxWidth="Infinity" prefHeight="46"/>
+                <Region prefHeight="20"/>
+
+
+                <HBox alignment="CENTER">
+                    <Label text="QuickBite" styleClass="brand-link-static"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </ScrollPane>
+</StackPane>

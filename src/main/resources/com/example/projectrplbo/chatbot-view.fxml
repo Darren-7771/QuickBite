@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="720" prefWidth="1100" styleClass="chatbot-root" stylesheets="@css/styles.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.projectrplbo.controller.ChatbotController">
+
+    <left>
+        <VBox minWidth="260" prefWidth="280" styleClass="sidebar">
+
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="sidebar-brand">
+                <padding><Insets bottom="20" left="20" right="20" top="20" /></padding>
+                <Label styleClass="sidebar-brand-icon" text="🍴" />
+                <VBox>
+                    <Label styleClass="sidebar-brand-name" text="QuickBite" />
+                    <Label styleClass="sidebar-brand-sub" text="Rule-Based Chatbot" />
+                </VBox>
+            </HBox>
+
+            <Separator styleClass="sidebar-sep" />
+
+            <VBox spacing="4" styleClass="sidebar-profile-card-beige">
+                <padding><Insets bottom="16" left="16" right="16" top="16" /></padding>
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <StackPane styleClass="avatar-circle">
+                        <Label styleClass="avatar-icon" text="&#x1F464;" textFill="WHITE" />
+                    </StackPane>
+                    <VBox HBox.hgrow="ALWAYS">
+                        <Label fx:id="lblNamaPengguna" styleClass="profile-name-dark" text="Nama Pengguna" />
+                        <Label fx:id="lblRolePengguna" styleClass="profile-role-dark" text="Pelanggan Setia" />
+                    </VBox>
+                    <Button onAction="#handleBukaProfilDialog" styleClass="btn-edit-pencil" text="&#x270F;" />
+                </HBox>
+            </VBox>
+
+            <Separator styleClass="sidebar-sep" />
+
+            <HBox alignment="CENTER_LEFT" spacing="0">
+                <padding><Insets bottom="8" left="16" right="16" top="12" /></padding>
+                <Label styleClass="sidebar-section-title" text="10 Terakhir" />
+            </HBox>
+
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="riwayat-scroll" VBox.vgrow="ALWAYS">
+                <VBox fx:id="vboxRiwayat" spacing="4" styleClass="riwayat-list">
+                    <padding><Insets bottom="4" left="12" right="12" top="4" /></padding>
+                </VBox>
+            </ScrollPane>
+
+            <VBox>
+                <padding><Insets bottom="20" left="16" right="16" top="12" /></padding>
+                <Button maxWidth="Infinity" onAction="#handleKeluar" prefHeight="40" styleClass="btn-keluar" text="⬅  Keluar" />
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox styleClass="chat-main">
+
+            <HBox alignment="CENTER_LEFT" spacing="12" styleClass="chat-header">
+                <padding>
+                    <Insets bottom="15" left="24" right="24" top="15" />
+                </padding>
+                <StackPane styleClass="status-dot-wrapper">
+                    <Region fx:id="statusDot" styleClass="status-dot-green" />
+                </StackPane>
+                <VBox>
+                    <Label fx:id="lblStatusSystem" styleClass="header-status-title" text="Sistem Aktif" />
+                    <Label fx:id="lblJamOperasional" styleClass="header-jam" text="Jam Operasional: --:-- WIB" />
+                </VBox>
+                <Region HBox.hgrow="ALWAYS" />
+                <Label styleClass="header-server-label" text="Server:" />
+                <Label fx:id="lblServerStatus" styleClass="header-server-online" text="Online" />
+            </HBox>
+
+            <ScrollPane fx:id="scrollChat" fitToWidth="true" hbarPolicy="NEVER" styleClass="chat-scroll" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS">
+                <VBox fx:id="vboxChat" spacing="8" styleClass="chat-vbox">
+                    <padding><Insets bottom="16" left="8" right="8" top="16" /></padding>
+                </VBox>
+            </ScrollPane>
+
+            <HBox alignment="CENTER" spacing="12" styleClass="chat-input-bar">
+                <padding><Insets bottom="12" left="20" right="20" top="12" /></padding>
+                <TextField fx:id="tfInput" onKeyPressed="#handleInputKeyPress" prefHeight="42" promptText="Masukkan perintah atau ID Menu di sini..." styleClass="chat-input" HBox.hgrow="ALWAYS" />
+                <Button onAction="#handleKirimPesan" prefHeight="42" prefWidth="42" styleClass="btn-send" text="➤" />
+            </HBox>
+
+            <HBox alignment="CENTER" styleClass="chat-footer">
+                <padding><Insets bottom="6" top="4" /></padding>
+                <Label styleClass="footer-hint" text="Gunakan perintah seperti: MENU, PESAN, STATUS, BATAL   " />
+                <Label styleClass="footer-powered" text="Powered by " />
+                <Label styleClass="footer-brand" text="QuickBite" />
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>
