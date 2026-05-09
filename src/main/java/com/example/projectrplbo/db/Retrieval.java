@@ -551,6 +551,18 @@ public class Retrieval {
         return prefix + rand;
     }
 
+    public boolean updateStatusPesanan(String idPesanan, String statusBaru) {
+        String sql = "UPDATE Pesanan SET status_pesanan = ? WHERE id_pesanan = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, statusBaru);
+            ps.setString(2, idPesanan);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updateStatusPesanan: " + e.getMessage());
+        }
+        return false;
+    }
+
     public String generatePesananId() {
         String sql = "SELECT MAX(id_pesanan) FROM Pesanan";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {

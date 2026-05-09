@@ -1400,3 +1400,47 @@
 .admin-penjualan-stat-icon {
     -fx-font-size : 24;
 }
+
+.admin-penjualan-btn-detail {
+    -fx-background-color: #EFF6FF;
+    -fx-text-fill: #1D4ED8;
+    -fx-font-size: 12px;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-color: #BFDBFE;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-padding: 4 10;
+    -fx-min-height: 28;
+}
+.admin-penjualan-btn-detail:hover {
+    -fx-background-color: #DBEAFE;
+}
+
+.admin-btn-selesai {
+    -fx-background-color: #ECFDF5;
+    -fx-text-fill: #065F46;
+    -fx-font-size: 12px;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-color: #6EE7B7;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+    -fx-padding: 4 10;
+    -fx-min-height: 28;
+}
+.admin-btn-selesai:hover {
+    -fx-background-color: #D1FAE5;
+}
+
+.admin-btn-selesai-done {
+    -fx-background-color: #F3F4F6;
+    -fx-text-fill: #9CA3AF;
+    -fx-font-size: 12px;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-color: #E5E7EB;
+    -fx-border-width: 1;
+    -fx-padding: 4 10;
+    -fx-min-height: 28;
+}

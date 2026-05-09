@@ -165,13 +165,20 @@ public class AdminPenjualanController {
         Label lblStatus = new Label(capitalize(p.getStatus()));
         lblStatus.getStyleClass().add("admin-status-" + statusCssKey(p.getStatus()));
         lblStatus.setMinWidth(90);
+
         Button btnDetail = new Button("👁  Detail");
         btnDetail.getStyleClass().add("admin-penjualan-btn-detail");
         btnDetail.setOnAction(e -> bukaModal(p, nama));
 
-        HBox aksiBox = new HBox(btnDetail);
+        boolean sudahSelesai = "SELESAI".equalsIgnoreCase(p.getStatus());
+        Button btnSelesai = new Button(sudahSelesai ? "✔ Selesai" : "Selesaikan");
+        btnSelesai.getStyleClass().add(sudahSelesai ? "admin-btn-selesai-done" : "admin-btn-selesai");
+        btnSelesai.setDisable(sudahSelesai);
+        btnSelesai.setOnAction(e -> handleSelesaikan(p.getIdPesanan(), nama));
+
+        HBox aksiBox = new HBox(6, btnDetail, btnSelesai);
         aksiBox.setAlignment(Pos.CENTER_LEFT);
-        aksiBox.setMinWidth(70);
+        aksiBox.setMinWidth(160);
 
         hbox.getChildren().addAll(lblId, lblNama, lblWaktu, lblMenu, lblHarga, lblStatus, aksiBox);
         return hbox;
@@ -213,6 +220,29 @@ public class AdminPenjualanController {
         mainPane.setEffect(new GaussianBlur(6));
         modalOverlay.setVisible(true);
         modalOverlay.setManaged(true);
+    }
+
+    private void handleSelesaikan(String idPesanan, String namaPelanggan) {
+        Alert konfirmasi = new Alert(Alert.AlertType.CONFIRMATION);
+        konfirmasi.setTitle("Konfirmasi Selesaikan Pesanan");
+        konfirmasi.setHeaderText(null);
+        konfirmasi.setContentText(
+            "Tandai pesanan " + idPesanan + " atas nama \"" + namaPelanggan + "\" sebagai SELESAI?");
+
+        konfirmasi.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                boolean berhasil = retrieval.updateStatusPesanan(idPesanan, "SELESAI");
+                if (berhasil) {
+                    loadData();
+                } else {
+                    Alert err = new Alert(Alert.AlertType.ERROR);
+                    err.setTitle("Gagal");
+                    err.setHeaderText(null);
+                    err.setContentText("Gagal memperbarui status pesanan. Coba lagi.");
+                    err.showAndWait();
+                }
+            }
+        });
     }
 
     @FXML

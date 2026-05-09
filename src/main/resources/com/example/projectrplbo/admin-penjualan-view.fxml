@@ -152,7 +152,7 @@
                             <Label text="Daftar Menu"     styleClass="admin-th" minWidth="210"/>
                             <Label text="Total Harga"     styleClass="admin-th" minWidth="100"/>
                             <Label text="Status"          styleClass="admin-th" minWidth="90"/>
-                            <Label text="Aksi"            styleClass="admin-th" minWidth="70"/>
+                            <Label text="Aksi"            styleClass="admin-th" minWidth="160"/>
                         </HBox>
 
                         <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
