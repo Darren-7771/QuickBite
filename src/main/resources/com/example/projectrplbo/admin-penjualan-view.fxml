@@ -77,104 +77,105 @@
         </left>
 
         <center>
-            <VBox styleClass="admin-content">
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="admin-content-scroll">
+                <VBox styleClass="admin-content">
 
-                <HBox alignment="CENTER_LEFT" styleClass="admin-content-header">
-                    <padding><Insets top="28" bottom="20" left="32" right="32"/></padding>
-                    <Label text="Manajemen Penjualan" styleClass="admin-page-title"/>
-                </HBox>
+                    <HBox alignment="CENTER_LEFT" styleClass="admin-content-header">
+                        <padding><Insets top="28" bottom="20" left="32" right="32"/></padding>
+                        <Label text="Manajemen Penjualan" styleClass="admin-page-title"/>
+                    </HBox>
 
-                <HBox spacing="20" styleClass="admin-stat-row">
-                    <padding><Insets left="32" right="32" bottom="24"/></padding>
+                    <HBox spacing="20" styleClass="admin-stat-row">
+                        <padding><Insets left="32" right="32" bottom="24"/></padding>
 
-                    <VBox styleClass="admin-penjualan-stat-card" HBox.hgrow="ALWAYS" spacing="4">
-                        <padding><Insets top="20" bottom="20" left="20" right="20"/></padding>
-                        <HBox alignment="CENTER_LEFT" spacing="12">
-                            <StackPane styleClass="admin-penjualan-stat-icon-box">
-                                <Label text="🗂" styleClass="admin-penjualan-stat-icon"/>
-                            </StackPane>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Label fx:id="lblPersenPendapatan" text="+12.5%" styleClass="admin-penjualan-badge-green"/>
-                        </HBox>
-                        <Region prefHeight="4"/>
-                        <Label text="Total Pendapatan Hari Ini" styleClass="admin-stat-label"/>
-                        <Label fx:id="lblTotalPendapatan" text="Rp 0" styleClass="admin-stat-value"/>
-                        <Label fx:id="lblUpdateTerakhir" text="Update terakhir: --:--" styleClass="admin-penjualan-stat-sub"/>
-                    </VBox>
-
-                    <VBox styleClass="admin-penjualan-stat-card" HBox.hgrow="ALWAYS" spacing="4">
-                        <padding><Insets top="20" bottom="20" left="20" right="20"/></padding>
-                        <HBox alignment="CENTER_LEFT" spacing="12">
-                            <StackPane styleClass="admin-penjualan-stat-icon-box">
-                                <Label text="🔒" styleClass="admin-penjualan-stat-icon"/>
-                            </StackPane>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Label fx:id="lblPersenPesanan" text="+8.2%" styleClass="admin-penjualan-badge-green"/>
-                        </HBox>
-                        <Region prefHeight="4"/>
-                        <Label text="Jumlah Pesanan Sukses" styleClass="admin-stat-label"/>
-                        <Label fx:id="lblJumlahPesananSukses" text="0" styleClass="admin-stat-value"/>
-                        <Label fx:id="lblDariTotal" text="Dari 0 total pesanan" styleClass="admin-penjualan-stat-sub"/>
-                    </VBox>
-                </HBox>
-
-                <VBox styleClass="admin-card" VBox.vgrow="ALWAYS">
-                    <padding><Insets top="20" left="32" right="32" bottom="0"/></padding>
-
-                    <HBox alignment="CENTER_LEFT" spacing="12">
-                        <VBox spacing="2" HBox.hgrow="ALWAYS">
-                            <Label text="Riwayat Pemesanan" styleClass="admin-card-title"/>
-                            <Label text="Menampilkan 10 pesanan terakhir (Database Limitation 4.1)"
-                                   styleClass="admin-penjualan-table-sub"/>
+                        <VBox styleClass="admin-penjualan-stat-card" HBox.hgrow="ALWAYS" spacing="4">
+                            <padding><Insets top="20" bottom="20" left="20" right="20"/></padding>
+                            <HBox alignment="CENTER_LEFT" spacing="12">
+                                <StackPane styleClass="admin-penjualan-stat-icon-box">
+                                    <Label text="🗂" styleClass="admin-penjualan-stat-icon"/>
+                                </StackPane>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="lblPersenPendapatan" text="+12.5%" styleClass="admin-penjualan-badge-green"/>
+                            </HBox>
+                            <Region prefHeight="4"/>
+                            <Label text="Total Pendapatan Hari Ini" styleClass="admin-stat-label"/>
+                            <Label fx:id="lblTotalPendapatan" text="Rp 0" styleClass="admin-stat-value"/>
+                            <Label fx:id="lblUpdateTerakhir" text="Update terakhir: --:--" styleClass="admin-penjualan-stat-sub"/>
                         </VBox>
-                        <HBox styleClass="admin-search-box" alignment="CENTER_LEFT" spacing="8"
-                              minWidth="220" prefWidth="240">
-                            <padding><Insets left="12" right="12"/></padding>
-                            <Label text="🔍" styleClass="admin-search-icon"/>
-                            <TextField fx:id="tfCariPesanan"
-                                       promptText="Cari ID atau Nama..."
-                                       styleClass="admin-search-inner"
-                                       HBox.hgrow="ALWAYS"
-                                       onKeyReleased="#handleCariPesanan"/>
+
+                        <VBox styleClass="admin-penjualan-stat-card" HBox.hgrow="ALWAYS" spacing="4">
+                            <padding><Insets top="20" bottom="20" left="20" right="20"/></padding>
+                            <HBox alignment="CENTER_LEFT" spacing="12">
+                                <StackPane styleClass="admin-penjualan-stat-icon-box">
+                                    <Label text="🔒" styleClass="admin-penjualan-stat-icon"/>
+                                </StackPane>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="lblPersenPesanan" text="+8.2%" styleClass="admin-penjualan-badge-green"/>
+                            </HBox>
+                            <Region prefHeight="4"/>
+                            <Label text="Jumlah Pesanan Sukses" styleClass="admin-stat-label"/>
+                            <Label fx:id="lblJumlahPesananSukses" text="0" styleClass="admin-stat-value"/>
+                            <Label fx:id="lblDariTotal" text="Dari 0 total pesanan" styleClass="admin-penjualan-stat-sub"/>
+                        </VBox>
+                    </HBox>
+
+                    <VBox styleClass="admin-card" VBox.vgrow="ALWAYS">
+                        <padding><Insets top="20" left="32" right="32" bottom="28"/></padding>
+
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="Riwayat Pemesanan" styleClass="admin-card-title"/>
+                                <Label text="Menampilkan 10 pesanan terakhir (Database Limitation 4.1)"
+                                       styleClass="admin-penjualan-table-sub"/>
+                            </VBox>
+                            <HBox styleClass="admin-search-box" alignment="CENTER_LEFT" spacing="8"
+                                  minWidth="220" prefWidth="240">
+                                <padding><Insets left="12" right="12"/></padding>
+                                <Label text="🔍" styleClass="admin-search-icon"/>
+                                <TextField fx:id="tfCariPesanan"
+                                           promptText="Cari ID atau Nama..."
+                                           styleClass="admin-search-inner"
+                                           HBox.hgrow="ALWAYS"
+                                           onKeyReleased="#handleCariPesanan"/>
+                            </HBox>
+                            <Button text="🖨  Cetak Laporan" onAction="#handleCetakLaporan"
+                                    styleClass="admin-btn-primary"/>
                         </HBox>
-                        <Button text="🖨  Cetak Laporan" onAction="#handleCetakLaporan"
-                                styleClass="admin-btn-primary"/>
-                    </HBox>
 
-                    <Region prefHeight="16"/>
+                        <Region prefHeight="16"/>
 
-                    <HBox styleClass="admin-table-header" spacing="0">
-                        <padding><Insets top="10" bottom="10" left="16" right="16"/></padding>
-                        <Label text="ID Pesanan"      styleClass="admin-th" minWidth="110"/>
-                        <Label text="Nama Pelanggan"  styleClass="admin-th" minWidth="130" HBox.hgrow="ALWAYS"/>
-                        <Label text="Waktu Transaksi" styleClass="admin-th" minWidth="120"/>
-                        <Label text="Daftar Menu"     styleClass="admin-th" minWidth="210"/>
-                        <Label text="Total Harga"     styleClass="admin-th" minWidth="100"/>
-                        <Label text="Status"          styleClass="admin-th" minWidth="90"/>
-                        <Label text="Aksi"            styleClass="admin-th" minWidth="70"/>
-                    </HBox>
+                        <HBox styleClass="admin-table-header" spacing="0">
+                            <padding><Insets top="10" bottom="10" left="16" right="16"/></padding>
+                            <Label text="ID Pesanan"      styleClass="admin-th" minWidth="110"/>
+                            <Label text="Nama Pelanggan"  styleClass="admin-th" minWidth="130" HBox.hgrow="ALWAYS"/>
+                            <Label text="Waktu Transaksi" styleClass="admin-th" minWidth="120"/>
+                            <Label text="Daftar Menu"     styleClass="admin-th" minWidth="210"/>
+                            <Label text="Total Harga"     styleClass="admin-th" minWidth="100"/>
+                            <Label text="Status"          styleClass="admin-th" minWidth="90"/>
+                            <Label text="Aksi"            styleClass="admin-th" minWidth="70"/>
+                        </HBox>
 
-                    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
-                                hbarPolicy="NEVER" styleClass="admin-table-scroll">
-                        <VBox fx:id="vboxPesananRows" styleClass="admin-table-body" spacing="0"/>
-                    </ScrollPane>
+                        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                                    hbarPolicy="NEVER" styleClass="admin-table-scroll">
+                            <VBox fx:id="vboxPesananRows" styleClass="admin-table-body" spacing="0"/>
+                        </ScrollPane>
 
-                    <HBox alignment="CENTER_RIGHT" spacing="8">
-                        <padding><Insets top="16" bottom="20"/></padding>
-                        <Label fx:id="lblPagingInfo" text="" styleClass="admin-paging-info" HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="btnPrev" text="Previous" onAction="#handlePrev" styleClass="admin-btn-paging"/>
-                        <HBox fx:id="hboxPageNumbers" spacing="4" alignment="CENTER"/>
-                        <Button fx:id="btnNext" text="Next"     onAction="#handleNext" styleClass="admin-btn-paging"/>
-                    </HBox>
+                        <HBox alignment="CENTER_RIGHT" spacing="8">
+                            <padding><Insets top="16" bottom="20"/></padding>
+                            <Label fx:id="lblPagingInfo" text="" styleClass="admin-paging-info" HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="btnPrev" text="Previous" onAction="#handlePrev" styleClass="admin-btn-paging"/>
+                            <HBox fx:id="hboxPageNumbers" spacing="4" alignment="CENTER"/>
+                            <Button fx:id="btnNext" text="Next"     onAction="#handleNext" styleClass="admin-btn-paging"/>
+                        </HBox>
+                    </VBox>
                 </VBox>
-
-                <Region prefHeight="20"/>
-            </VBox>
+            </ScrollPane>
         </center>
     </BorderPane>
 
     <StackPane fx:id="modalOverlay" styleClass="admin-modal-overlay"
-               visible="false" managed="false">
+               visible="false" managed="false"
+               alignment="CENTER">
 
         <VBox styleClass="admin-modal-card" maxWidth="360" spacing="0">
 
