@@ -380,7 +380,104 @@ public class Retrieval {
         return list;
     }
 
-    public Response createResponse(int status, String msg, Object data) {
+    public List<Pesanan> getAllPesananTerbaru(int limit) {
+        List<Pesanan> list = new ArrayList<>();
+        String sql = "SELECT id_pesanan, tgl_pesanan, total_harga, status_pesanan, id_pengguna "
+            + "FROM Pesanan ORDER BY tgl_pesanan DESC LIMIT ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, limit);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) list.add(mapPesanan(rs));
+        } catch (SQLException e) {
+            System.err.println("Error getAllPesananTerbaru: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public String getNamaPelangganByPesanan(String idPengguna) {
+        String sql = "SELECT nama_lengkap FROM Pengguna WHERE id_pengguna = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, idPengguna);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getString("nama_lengkap");
+        } catch (SQLException e) {
+            System.err.println("Error getNamaPelanggan: " + e.getMessage());
+        }
+        return "-";
+    }
+
+    public String getMenuTerlaris() {
+        String sql = """
+            SELECT m.nama_menu, SUM(dp.jumlah) AS total_terjual
+            FROM Detail_Pesanan dp
+            JOIN Menu m ON dp.id_menu = m.id_menu
+            GROUP BY dp.id_menu ORDER BY total_terjual DESC LIMIT 1
+        """;
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) return rs.getString("nama_menu");
+        } catch (SQLException e) {
+            System.err.println("Error getMenuTerlaris: " + e.getMessage());
+        }
+        return "-";
+    }
+
+    public boolean tambahMenu(String idMenu, String namaMenu, String kategori,
+                              double harga, int stok) {
+        String sql = "INSERT INTO Menu (id_menu, nama_menu, kategori, harga, stok) VALUES (?,?,?,?,?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, idMenu);
+            ps.setString(2, namaMenu);
+            ps.setString(3, kategori);
+            ps.setDouble(4, harga);
+            ps.setInt(5, stok);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error tambahMenu: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean updateMenu(String idMenu, String namaMenu, String kategori,
+                              double harga, int stok) {
+        String sql = "UPDATE Menu SET nama_menu=?, kategori=?, harga=?, stok=? WHERE id_menu=?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, namaMenu);
+            ps.setString(2, kategori);
+            ps.setDouble(3, harga);
+            ps.setInt(4, stok);
+            ps.setString(5, idMenu);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updateMenu: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean hapusMenu(String idMenu) {
+        String sql = "DELETE FROM Menu WHERE id_menu = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, idMenu);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error hapusMenu: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean setStok(String idMenu, int stokBaru) {
+        String sql = "UPDATE Menu SET stok = ? WHERE id_menu = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, stokBaru);
+            ps.setString(2, idMenu);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error setStok: " + e.getMessage());
+        }
+        return false;
+    }
+
+        public Response createResponse(int status, String msg, Object data) {
         return new Response(status, msg, data);
     }
 
