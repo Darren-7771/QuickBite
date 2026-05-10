@@ -67,6 +67,11 @@ public class LoginController {
                 }
             }
         } else {
+            if (retrieval.isPenggunaTerblokir(username, password)) {
+                showBlockedAlert();
+                return;
+            }
+
             Pengguna pengguna = retrieval.loginPengguna(username, password);
             if (pengguna == null) {
                 showError("Username atau password salah.");
@@ -96,5 +101,15 @@ public class LoginController {
     private void showError(String msg) {
         lblError.setText(msg);
         lblError.setVisible(true);
+    }
+
+    private void showBlockedAlert() {
+        showError("Akun Anda telah terblokir.");
+
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Akun Terblokir");
+        alert.setHeaderText("Akun Anda telah terblokir");
+        alert.setContentText("Silakan hubungi admin QuickBite untuk membuka kembali akun Anda.");
+        alert.showAndWait();
     }
 }
