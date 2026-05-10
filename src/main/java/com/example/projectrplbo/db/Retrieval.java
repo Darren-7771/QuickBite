@@ -181,12 +181,14 @@ public class Retrieval {
     }
 
     public Pengguna loginPengguna(String username, String password) {
+        ensureStatusColumn();
         String passwordHash = java.util.Base64.getEncoder().encodeToString(password.getBytes());
         String sql = """
             SELECT a.id_akun, a.username, a.password, p.id_pengguna, p.nama_lengkap,
                    p.jalan, p.kota, p.provinsi, p.kode_pos, p.no_telepon, p.email
             FROM Akun a JOIN Pengguna p ON a.id_akun = p.id_akun
             WHERE a.username = ? AND a.password = ? AND a.role = 'Pengguna'
+              AND COALESCE(a.status, 'Aktif') <> 'Terblokir'
         """;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username);
@@ -205,6 +207,26 @@ public class Retrieval {
             System.err.println("Error loginPengguna: " + e.getMessage());
         }
         return null;
+    }
+
+    public boolean isPenggunaTerblokir(String username, String password) {
+        ensureStatusColumn();
+        String passwordHash = java.util.Base64.getEncoder().encodeToString(password.getBytes());
+        String sql = """
+            SELECT COALESCE(a.status, 'Aktif') AS status
+            FROM Akun a
+            JOIN Pengguna p ON a.id_akun = p.id_akun
+            WHERE a.username = ? AND a.password = ? AND a.role = 'Pengguna'
+        """;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ps.setString(2, passwordHash);
+            ResultSet rs = ps.executeQuery();
+            return rs.next() && "Terblokir".equalsIgnoreCase(rs.getString("status"));
+        } catch (SQLException e) {
+            System.err.println("Error isPenggunaTerblokir: " + e.getMessage());
+        }
+        return false;
     }
 
     public Admin loginAdmin(String username, String password) {
