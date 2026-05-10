@@ -165,6 +165,7 @@ public class AdminPenjualanController {
         Label lblStatus = new Label(capitalize(p.getStatus()));
         lblStatus.getStyleClass().add("admin-status-" + statusCssKey(p.getStatus()));
         lblStatus.setMinWidth(90);
+        lblStatus.setMaxWidth(90);
 
         Button btnDetail = new Button("👁  Detail");
         btnDetail.getStyleClass().add("admin-penjualan-btn-detail");
@@ -176,7 +177,7 @@ public class AdminPenjualanController {
         btnSelesai.setDisable(sudahSelesai);
         btnSelesai.setOnAction(e -> handleSelesaikan(p.getIdPesanan(), nama));
 
-        HBox aksiBox = new HBox(6, btnDetail, btnSelesai);
+        HBox aksiBox = new HBox(8, btnDetail, btnSelesai);
         aksiBox.setAlignment(Pos.CENTER_LEFT);
         aksiBox.setMinWidth(160);
 

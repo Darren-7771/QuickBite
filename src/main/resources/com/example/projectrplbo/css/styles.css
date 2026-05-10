@@ -1154,36 +1154,40 @@
     -fx-background-color: #D1FAE5;
     -fx-text-fill: #065F46;
     -fx-background-radius: 20;
-    -fx-padding: 4 12;
+    -fx-padding: 6 14;
     -fx-font-size: 12px;
     -fx-font-weight: bold;
+    -fx-alignment: CENTER;
 }
 
 .admin-status-proses {
     -fx-background-color: #FEF3C7;
     -fx-text-fill: #92400E;
     -fx-background-radius: 20;
-    -fx-padding: 4 12;
+    -fx-padding: 6 14;
     -fx-font-size: 12px;
     -fx-font-weight: bold;
+    -fx-alignment: CENTER;
 }
 
 .admin-status-batal {
     -fx-background-color: #FEE2E2;
     -fx-text-fill: #991B1B;
     -fx-background-radius: 20;
-    -fx-padding: 4 12;
+    -fx-padding: 6 14;
     -fx-font-size: 12px;
     -fx-font-weight: bold;
+    -fx-alignment: CENTER;
 }
 
 .admin-status-warning {
     -fx-background-color: #FEF3C7;
     -fx-text-fill: #92400E;
     -fx-background-radius: 20;
-    -fx-padding: 4 10;
+    -fx-padding: 6 14;
     -fx-font-size: 12px;
     -fx-font-weight: bold;
+    -fx-alignment: CENTER;
 }
 
 .admin-stok-habis {
@@ -1399,6 +1403,18 @@
 
 .admin-penjualan-stat-icon {
     -fx-font-size : 24;
+}
+
+.admin-penjualan-id-link {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A2E;
+}
+
+.admin-penjualan-nama-bold {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A2E;
 }
 
 .admin-penjualan-btn-detail {
