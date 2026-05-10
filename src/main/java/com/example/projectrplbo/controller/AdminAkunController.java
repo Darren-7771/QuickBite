@@ -34,9 +34,11 @@ public class AdminAkunController {
     private List<PenggunaInfo> penggunaTerfilter = List.of();
 
     private static final int PER_HALAMAN = 5;
+    private static final double COL_CHECK = 36;
+    private static final double COL_MIN = 110;
+    private static final double COL_PREF = 120;
     private int halamanSaat = 0;
 
-    // Simple in-memory auto-reply setting (persisted via Retrieval if needed)
     private boolean autoReplyEnabled = true;
 
     public void initData(Admin admin) {
@@ -116,7 +118,6 @@ public class AdminAkunController {
         btnPrev.setDisable(halamanSaat == 0);
         btnNext.setDisable(halamanSaat >= totalHalaman - 1);
 
-        // Page number buttons
         hboxPageNumbers.getChildren().clear();
         for (int i = 0; i < totalHalaman; i++) {
             final int idx = i;
@@ -137,12 +138,9 @@ public class AdminAkunController {
         row.setPadding(new Insets(12, 16, 12, 16));
         row.setAlignment(Pos.CENTER_LEFT);
 
-        // Checkbox
         CheckBox cb = new CheckBox();
-        cb.setMinWidth(36);
-        cb.setMaxWidth(36);
+        setFixedWidth(cb, COL_CHECK);
 
-        // Foto & Nama
         HBox fotoNama = new HBox(8);
         fotoNama.setAlignment(Pos.CENTER_LEFT);
         StackPane avatar = new StackPane();
@@ -154,19 +152,14 @@ public class AdminAkunController {
         lblNama.getStyleClass().add("admin-cell-text");
         lblNama.setWrapText(false);
         fotoNama.getChildren().addAll(avatar, lblNama);
-        HBox.setHgrow(fotoNama, Priority.ALWAYS);
-        fotoNama.setMinWidth(160);
+        setFluidColumn(fotoNama);
 
-        // Username
         Label lblUsername = new Label(p.getUsername());
         lblUsername.getStyleClass().add("admin-cell-text");
-        lblUsername.setMinWidth(130);
-        lblUsername.setMaxWidth(130);
+        setFluidColumn(lblUsername);
 
-        // Kontak (email + telepon)
         VBox kontak = new VBox(2);
-        kontak.setMinWidth(200);
-        kontak.setMaxWidth(200);
+        setFluidColumn(kontak);
         Label lblEmail = new Label(p.getEmail());
         lblEmail.getStyleClass().add("admin-cell-text");
         lblEmail.setWrapText(false);
@@ -174,22 +167,21 @@ public class AdminAkunController {
         lblTelp.getStyleClass().add("admin-cell-sub");
         kontak.getChildren().addAll(lblEmail, lblTelp);
 
-        // Tanggal Daftar
         Label lblTgl = new Label(p.getTanggalDaftar());
         lblTgl.getStyleClass().add("admin-cell-text");
-        lblTgl.setMinWidth(130);
-        lblTgl.setMaxWidth(130);
+        setFluidColumn(lblTgl);
 
-        // Status
+        HBox statusCell = new HBox();
+        statusCell.setAlignment(Pos.CENTER_LEFT);
+        setFluidColumn(statusCell);
         Label lblStatus = new Label(p.getStatus());
         lblStatus.getStyleClass().add(
             "Aktif".equalsIgnoreCase(p.getStatus()) ? "admin-status-selesai" : "admin-status-warning");
-        lblStatus.setMinWidth(90);
+        statusCell.getChildren().add(lblStatus);
 
-        // Aksi
         HBox aksi = new HBox(6);
         aksi.setAlignment(Pos.CENTER_LEFT);
-        aksi.setMinWidth(110);
+        setFluidColumn(aksi);
 
         Button btnDetail = new Button("👁");
         btnDetail.getStyleClass().add("admin-btn-icon-edit");
@@ -210,8 +202,21 @@ public class AdminAkunController {
 
         aksi.getChildren().addAll(btnDetail, btnToggleStatus, btnHapus);
 
-        row.getChildren().addAll(cb, fotoNama, lblUsername, kontak, lblTgl, lblStatus, aksi);
+        row.getChildren().addAll(cb, fotoNama, lblUsername, kontak, lblTgl, statusCell, aksi);
         return row;
+    }
+
+    private void setFixedWidth(Region region, double width) {
+        region.setMinWidth(width);
+        region.setPrefWidth(width);
+        region.setMaxWidth(width);
+    }
+
+    private void setFluidColumn(Region region) {
+        region.setMinWidth(COL_MIN);
+        region.setPrefWidth(COL_PREF);
+        region.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(region, Priority.ALWAYS);
     }
 
     private void handleLihatDetail(PenggunaInfo p) {
@@ -307,7 +312,6 @@ public class AdminAkunController {
         alert.showAndWait();
     }
 
-    // ── Navigation ──────────────────────────────────────────────
     @FXML
     private void handleNavDashboard() throws IOException {
         AdminDashboardController ctrl = MainApp.loadSceneWithController(
