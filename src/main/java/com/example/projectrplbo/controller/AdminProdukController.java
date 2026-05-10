@@ -157,7 +157,12 @@ public class AdminProdukController {
                 : m.getStok() <= STOK_RENDAH_THRESHOLD ? "Stok Rendah" : "Tersedia";
         Label lblStatus = new Label(statusTeks);
         lblStatus.getStyleClass().add("admin-status-" + statusCssKey(statusTeks));
-        lblStatus.setMinWidth(100);
+        HBox statusCell = new HBox(lblStatus);
+        statusCell.setAlignment(Pos.CENTER_LEFT);
+        statusCell.setMinWidth(130);
+        statusCell.setPrefWidth(150);
+        statusCell.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(statusCell, Priority.ALWAYS);
 
         Button btnEdit = new Button("✏");
         btnEdit.getStyleClass().add("admin-btn-icon-edit");
@@ -169,9 +174,12 @@ public class AdminProdukController {
 
         HBox aksiBox = new HBox(6, btnEdit, btnHapus);
         aksiBox.setAlignment(Pos.CENTER_LEFT);
-        aksiBox.setMinWidth(70);
+        aksiBox.setMinWidth(120);
+        aksiBox.setPrefWidth(130);
+        aksiBox.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(aksiBox, Priority.ALWAYS);
 
-        row.getChildren().addAll(lblId, lblNama, lblKat, lblHarga, lblStok, lblStatus, aksiBox);
+        row.getChildren().addAll(lblId, lblNama, lblKat, lblHarga, lblStok, statusCell, aksiBox);
         return row;
     }
 

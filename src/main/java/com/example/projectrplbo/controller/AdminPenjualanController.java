@@ -175,8 +175,12 @@ public class AdminPenjualanController {
         lblHarga.setMaxWidth(100);
         Label lblStatus = new Label(capitalize(p.getStatus()));
         lblStatus.getStyleClass().add("admin-status-" + statusCssKey(p.getStatus()));
-        lblStatus.setMinWidth(90);
-        lblStatus.setMaxWidth(90);
+        HBox statusCell = new HBox(lblStatus);
+        statusCell.setAlignment(Pos.CENTER_LEFT);
+        statusCell.setMinWidth(130);
+        statusCell.setPrefWidth(150);
+        statusCell.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(statusCell, Priority.ALWAYS);
 
         Button btnDetail = new Button("👁  Detail");
         btnDetail.getStyleClass().add("admin-penjualan-btn-detail");
@@ -190,9 +194,12 @@ public class AdminPenjualanController {
 
         HBox aksiBox = new HBox(8, btnDetail, btnSelesai);
         aksiBox.setAlignment(Pos.CENTER_LEFT);
-        aksiBox.setMinWidth(160);
+        aksiBox.setMinWidth(180);
+        aksiBox.setPrefWidth(190);
+        aksiBox.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(aksiBox, Priority.ALWAYS);
 
-        hbox.getChildren().addAll(lblId, lblNama, lblWaktu, lblMenu, lblHarga, lblStatus, aksiBox);
+        hbox.getChildren().addAll(lblId, lblNama, lblWaktu, lblMenu, lblHarga, statusCell, aksiBox);
         return hbox;
     }
 

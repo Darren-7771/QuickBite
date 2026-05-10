@@ -177,8 +177,8 @@
                         <Label text="Kategori"     styleClass="admin-th" minWidth="90"/>
                         <Label text="Harga"        styleClass="admin-th" minWidth="100"/>
                         <Label text="Stok"         styleClass="admin-th" minWidth="60"/>
-                        <Label text="Status"       styleClass="admin-th" minWidth="100"/>
-                        <Label text="Aksi"         styleClass="admin-th" minWidth="70"/>
+                        <Label text="Status"       styleClass="admin-th" minWidth="130" prefWidth="150" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                        <Label text="Aksi"         styleClass="admin-th" minWidth="120" prefWidth="130" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
                     </HBox>
 
                     <VBox fx:id="vboxProdukRows" styleClass="admin-table-body" spacing="0"/>

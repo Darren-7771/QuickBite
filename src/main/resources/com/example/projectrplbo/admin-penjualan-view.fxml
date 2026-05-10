@@ -151,8 +151,8 @@
                             <Label text="Waktu Transaksi" styleClass="admin-th" minWidth="120"/>
                             <Label text="Daftar Menu"     styleClass="admin-th" minWidth="210"/>
                             <Label text="Total Harga"     styleClass="admin-th" minWidth="100"/>
-                            <Label text="Status"          styleClass="admin-th" minWidth="90"/>
-                            <Label text="Aksi"            styleClass="admin-th" minWidth="160"/>
+                            <Label text="Status"          styleClass="admin-th" minWidth="130" prefWidth="150" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                            <Label text="Aksi"            styleClass="admin-th" minWidth="180" prefWidth="190" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
                         </HBox>
 
                         <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
