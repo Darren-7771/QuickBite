@@ -105,13 +105,13 @@
 
                         <HBox styleClass="admin-table-header" spacing="0">
                             <padding><Insets top="10" bottom="10" left="16" right="16"/></padding>
-                            <Region minWidth="36" maxWidth="36"/>
-                            <Label text="Foto &amp; Nama"  styleClass="admin-th" minWidth="160" HBox.hgrow="ALWAYS"/>
-                            <Label text="Username"         styleClass="admin-th" minWidth="130"/>
-                            <Label text="Kontak"           styleClass="admin-th" minWidth="200"/>
-                            <Label text="Tanggal Daftar"   styleClass="admin-th" minWidth="130"/>
-                            <Label text="Status"           styleClass="admin-th" minWidth="90"/>
-                            <Label text="Aksi"             styleClass="admin-th" minWidth="110"/>
+                            <Region minWidth="36" prefWidth="36" maxWidth="36"/>
+                            <Label text="Foto &amp; Nama"  styleClass="admin-th" minWidth="110" prefWidth="120" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                            <Label text="Username"         styleClass="admin-th" minWidth="110" prefWidth="120" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                            <Label text="Kontak"           styleClass="admin-th" minWidth="110" prefWidth="120" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                            <Label text="Tanggal Daftar"   styleClass="admin-th" minWidth="110" prefWidth="120" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                            <Label text="Status"           styleClass="admin-th" minWidth="110" prefWidth="120" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                            <Label text="Aksi"             styleClass="admin-th" minWidth="110" prefWidth="120" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
                         </HBox>
 
                         <VBox fx:id="vboxAkunRows" styleClass="admin-table-body" spacing="0"/>
