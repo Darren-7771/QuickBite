@@ -238,4 +238,29 @@
         </VBox>
     </StackPane>
 
+    <StackPane fx:id="eksporOverlay" styleClass="admin-modal-overlay"
+               visible="false" managed="false"
+               alignment="CENTER">
+
+        <VBox styleClass="admin-modal-card" maxWidth="340" spacing="0">
+
+            <HBox alignment="TOP_LEFT">
+                <padding><Insets top="12" left="14" right="14" bottom="0"/></padding>
+                <Button text="✕" styleClass="admin-modal-close" onAction="#handleTutupEkspor"/>
+            </HBox>
+
+            <VBox spacing="16">
+                <padding><Insets top="4" left="32" right="32" bottom="32"/></padding>
+
+                <Label text="Ekspor Data Penjualan" styleClass="admin-modal-receipt-title"/>
+
+                <Button text="⬇  Excel (.xlsx)" onAction="#handleEksporXlsx"
+                        styleClass="admin-ekspor-btn" maxWidth="Infinity"/>
+
+                <Button text="⬇  CSV (.csv)" onAction="#handleEksporCsv"
+                        styleClass="admin-ekspor-btn" maxWidth="Infinity"/>
+            </VBox>
+        </VBox>
+    </StackPane>
+
 </StackPane>

@@ -11,8 +11,14 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -35,6 +41,7 @@ public class AdminPenjualanController {
     @FXML private Button    btnNext;
     @FXML private HBox      hboxPageNumbers;
     @FXML private StackPane modalOverlay;
+    @FXML private StackPane eksporOverlay;
     @FXML private BorderPane mainPane;
     @FXML private Label lblModalIdTransaksi;
     @FXML private Label lblModalNama;
@@ -68,6 +75,10 @@ public class AdminPenjualanController {
         if (modalOverlay != null) {
             modalOverlay.setVisible(false);
             modalOverlay.setManaged(false);
+        }
+        if (eksporOverlay != null) {
+            eksporOverlay.setVisible(false);
+            eksporOverlay.setManaged(false);
         }
     }
 
@@ -270,11 +281,125 @@ public class AdminPenjualanController {
 
     @FXML
     private void handleCetakLaporan() {
-        Alert info = new Alert(Alert.AlertType.INFORMATION);
-        info.setTitle("Cetak Laporan");
-        info.setHeaderText(null);
-        info.setContentText("Fitur cetak laporan belum diimplementasikan.");
-        info.showAndWait();
+        mainPane.setEffect(new GaussianBlur(6));
+        eksporOverlay.setVisible(true);
+        eksporOverlay.setManaged(true);
+    }
+
+    @FXML
+    private void handleTutupEkspor() {
+        mainPane.setEffect(null);
+        eksporOverlay.setVisible(false);
+        eksporOverlay.setManaged(false);
+    }
+
+    @FXML
+    private void handleEksporCsv() {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Simpan Laporan CSV");
+        chooser.setInitialFileName("laporan_penjualan_"
+                + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmm")) + ".csv");
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+
+        File file = chooser.showSaveDialog(eksporOverlay.getScene().getWindow());
+        if (file == null) return;
+
+        List<Pesanan> semua = retrieval.getAllPesananTerbaru(Integer.MAX_VALUE);
+        try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(
+                new FileOutputStream(file), StandardCharsets.UTF_8))) {
+
+            pw.println("\uFEFF" + "ID Pesanan,Nama Pelanggan,Waktu Transaksi,Daftar Menu,Total Harga,Status");
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            for (Pesanan p : semua) {
+                String nama   = retrieval.getNamaPelangganByPesanan(p.getIdPengguna());
+                String waktu  = p.getTanggal() != null ? p.getTanggal().format(fmt) : "-";
+                String menu   = buatRingkasanMenu(p.getIdPesanan()).replace(",", ";");
+                pw.printf("\"%s\",\"%s\",\"%s\",\"%s\",\"%.0f\",\"%s\"%n",
+                        p.getIdPesanan(), nama, waktu, menu, p.getTotalHarga(), p.getStatus());
+            }
+            handleTutupEkspor();
+            tampilkanSukses("Berhasil disimpan ke:\n" + file.getAbsolutePath());
+        } catch (IOException e) {
+            tampilkanError("Gagal menyimpan file CSV: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleEksporXlsx() {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Simpan Laporan Excel");
+        chooser.setInitialFileName("laporan_penjualan_"
+                + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmm")) + ".xlsx");
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx"));
+
+        File file = chooser.showSaveDialog(eksporOverlay.getScene().getWindow());
+        if (file == null) return;
+
+        List<Pesanan> semua = retrieval.getAllPesananTerbaru(Integer.MAX_VALUE);
+        try (Workbook wb = new XSSFWorkbook()) {
+            Sheet sheet = wb.createSheet("Laporan Penjualan");
+
+            CellStyle headerStyle = wb.createCellStyle();
+            Font headerFont = wb.createFont();
+            headerFont.setBold(true);
+            headerStyle.setFont(headerFont);
+            headerStyle.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
+            headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            Font hf2 = wb.createFont();
+            hf2.setBold(true);
+            hf2.setColor(IndexedColors.WHITE.getIndex());
+            headerStyle.setFont(hf2);
+
+            String[] headers = {"ID Pesanan", "Nama Pelanggan", "Waktu Transaksi",
+                                 "Daftar Menu", "Total Harga (Rp)", "Status"};
+            Row headerRow = sheet.createRow(0);
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerStyle);
+            }
+
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            int rowIdx = 1;
+            for (Pesanan p : semua) {
+                Row row = sheet.createRow(rowIdx++);
+                String nama  = retrieval.getNamaPelangganByPesanan(p.getIdPengguna());
+                String waktu = p.getTanggal() != null ? p.getTanggal().format(fmt) : "-";
+                String menu  = buatRingkasanMenu(p.getIdPesanan());
+                row.createCell(0).setCellValue(p.getIdPesanan());
+                row.createCell(1).setCellValue(nama);
+                row.createCell(2).setCellValue(waktu);
+                row.createCell(3).setCellValue(menu);
+                row.createCell(4).setCellValue(p.getTotalHarga());
+                row.createCell(5).setCellValue(p.getStatus());
+            }
+
+            for (int i = 0; i < headers.length; i++) sheet.autoSizeColumn(i);
+
+            try (FileOutputStream fos = new FileOutputStream(file)) {
+                wb.write(fos);
+            }
+            handleTutupEkspor();
+            tampilkanSukses("Berhasil disimpan ke:\n" + file.getAbsolutePath());
+        } catch (IOException e) {
+            tampilkanError("Gagal menyimpan file Excel: " + e.getMessage());
+        }
+    }
+
+    private void tampilkanSukses(String pesan) {
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setTitle("Ekspor Berhasil");
+        a.setHeaderText(null);
+        a.setContentText(pesan);
+        a.showAndWait();
+    }
+
+    private void tampilkanError(String pesan) {
+        Alert a = new Alert(Alert.AlertType.ERROR);
+        a.setTitle("Ekspor Gagal");
+        a.setHeaderText(null);
+        a.setContentText(pesan);
+        a.showAndWait();
     }
 
     @FXML private void handlePrev() { if (currentPage > 0) { currentPage--; renderPage(); } }

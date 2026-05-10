@@ -1646,3 +1646,24 @@
     -fx-background-color: #D1D5DB;
     -fx-text-fill: #4B5563;
 }
+
+.admin-ekspor-btn {
+    -fx-background-color: #F8FAFC;
+    -fx-text-fill: #1E3A8A;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #CBD5E1;
+    -fx-border-width: 1.5;
+    -fx-cursor: hand;
+    -fx-padding: 12 20;
+    -fx-alignment: CENTER_LEFT;
+}
+.admin-ekspor-btn:hover {
+    -fx-background-color: #EFF6FF;
+    -fx-border-color: #1E3A8A;
+}
+.admin-ekspor-btn:pressed {
+    -fx-background-color: #DBEAFE;
+}
