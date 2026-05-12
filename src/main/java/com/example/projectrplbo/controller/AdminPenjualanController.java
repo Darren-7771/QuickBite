@@ -233,7 +233,7 @@ public class AdminPenjualanController {
 
         double total = p.getTotalHarga();
         lblModalTotal.setText(String.format("Rp %,.0f", total));
-        lblModalBayar.setText(String.format("Rp %,.0f", total));   // uang bayar = total (assumption)
+        lblModalBayar.setText(String.format("Rp %,.0f", total));
         lblModalKembali.setText("Rp 0");
 
         mainPane.setEffect(new GaussianBlur(6));

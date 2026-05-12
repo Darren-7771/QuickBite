@@ -75,17 +75,17 @@ public class Orchestration {
             return;
         }
 
+        if (matchesAnyPattern(lower, Intent.BATAL_PESANAN.name())) {
+            intent = Intent.BATAL_PESANAN.name();
+            return;
+        }
+
         if (state == ConversationState.KONFIRMASI
                 || state == ConversationState.PILIH_MENU) {
             if (matchesAnyPattern(lower, Intent.KONFIRMASI_PESANAN.name())) {
                 intent = Intent.KONFIRMASI_PESANAN.name();
                 return;
             }
-        }
-
-        if (matchesAnyPattern(lower, Intent.BATAL_PESANAN.name())) {
-            intent = Intent.BATAL_PESANAN.name();
-            return;
         }
 
         String[] intentOrder = {
@@ -111,7 +111,19 @@ public class Orchestration {
 
     private boolean matchesAnyPattern(String lowerInput, String intentName) {
         List<String> patterns = intentPatterns.getOrDefault(intentName, List.of());
-        return patterns.stream().anyMatch(lowerInput::contains);
+        return patterns.stream().anyMatch(p -> matchesPattern(lowerInput, p));
+    }
+
+    private boolean matchesPattern(String lowerInput, String pattern) {
+
+        if (pattern.contains(" ")) {
+            return lowerInput.contains(pattern);
+        }
+
+        Pattern wp = Pattern.compile(
+            "(?<![a-z])" + Pattern.quote(pattern) + "(?![a-z])"
+        );
+        return wp.matcher(lowerInput).find();
     }
 
     public Entity extractEntity(String input) {
@@ -203,14 +215,14 @@ public class Orchestration {
         String msg = """
             📖 *Panduan QuickBite:*
 
-            > Tanya menu  — "Menu apa saja yang tersedia?"
-            > Cari kategori — "Ada menu ayam apa?" / "Tampilkan burger"
-            > Pesan — "Saya mau pesan MKN00001" / "Pesan 2 MKN00001"
-            > Cek stok — "Masih ada MKN00001?" / "Cek stok MKN00001"
-            > Keranjang — "Lihat keranjang saya" / "Berapa totalnya?"
-            > Riwayat — "Pesanan saya" / "Lihat history order"
-            > Batalkan — "Batalkan pesanan" / "Tidak jadi"
-            > Konfirmasi — "Ya, lanjut" / "Konfirmasi pesanan"
+            > Tanya menu  - "Menu apa saja yang tersedia?"
+            > Cari kategori - "Ada menu ayam apa?" / "Tampilkan burger"
+            > Pesan - "Saya mau pesan MKN00001" / "Pesan 2 MKN00001"
+            > Cek stok - "Masih ada MKN00001?" / "Cek stok MKN00001"
+            > Keranjang - "Lihat keranjang saya" / "Berapa totalnya?"
+            > Riwayat - "Pesanan saya" / "Lihat history order"
+            > Batalkan - "Batalkan pesanan" / "Tidak jadi"
+            > Konfirmasi - "Ya, lanjut" / "Konfirmasi pesanan"
 
             Kategori tersedia: """ + kategoriStr;
         return Response.ok(msg, null);
@@ -226,7 +238,7 @@ public class Orchestration {
         for (Menu m : menus) {
             if (!m.getKategori().equals(currentKat)) {
                 currentKat = m.getKategori();
-                sb.append("— ").append(currentKat.toUpperCase()).append(" —\n");
+                sb.append("- ").append(currentKat.toUpperCase()).append(" -\n");
             }
             sb.append(String.format("• *%s* - %s%n  Rp %,.0f | Stok: %d%n",
                 m.getIdMenu(), m.getNamaMenu(), m.getHarga(), m.getStok()));
@@ -283,7 +295,7 @@ public class Orchestration {
         Menu m = menuCache.get(entity.getIdMenu().toUpperCase());
         String nama = (m != null) ? m.getNamaMenu() : entity.getIdMenu();
         if (stok == 0) {
-            return Response.ok("⚠️ Maaf, stok *" + nama + "* saat ini *habis*.", stok);
+            return Response.ok("⚠ Maaf, stok *" + nama + "* saat ini *habis*.", stok);
         }
         return Response.ok("✅ Stok *" + nama + "*: " + stok + " porsi tersedia.", stok);
     }
@@ -307,10 +319,10 @@ public class Orchestration {
         int stok = retrieval.checkStok(id);
         int req  = entity.getJumlah();
         if (stok <= 0) {
-            return Response.badRequest("⚠️ Maaf, *" + menu.getNamaMenu() + "* stoknya habis!");
+            return Response.badRequest("⚠ Maaf, *" + menu.getNamaMenu() + "* stoknya habis!");
         }
         if (req > stok) {
-            return Response.badRequest("⚠️ Stok *" + menu.getNamaMenu()
+            return Response.badRequest("⚠ Stok *" + menu.getNamaMenu()
                 + "* tidak mencukupi. Tersedia: " + stok + " porsi.");
         }
         if (keranjang.containsKey(id)) {
@@ -411,9 +423,9 @@ public class Orchestration {
         if (state == ConversationState.PILIH_MENU || state == ConversationState.KONFIRMASI) {
             return Response.badRequest(
                 "Saya tidak mengerti. Apakah maksud Anda:\n"
-                + "• Tambah item? — \"Saya mau pesan [ID Menu]\"\n"
-                + "• Konfirmasi? — \"Ya, lanjutkan pesanan\"\n"
-                + "• Batalkan? — \"Batalkan pesanan saya\"");
+                + "• Tambah item? - \"Saya mau pesan [ID Menu]\"\n"
+                + "• Konfirmasi? - \"Ya, lanjutkan pesanan\"\n"
+                + "• Batalkan? - \"Batalkan pesanan saya\"");
         }
         return Response.badRequest(
             "🤔 Maaf, saya belum memahami pertanyaan Anda.\n"
